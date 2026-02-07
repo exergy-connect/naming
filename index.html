@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exergy Physics - Cosmic Navigator</title>
+    <title>Exergy ∞ Physics - Universal Navigator</title>
     <style>
         * {
             margin: 0;
@@ -482,7 +482,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌌 Exergy Physics</h1>
+            <h1>🌌 Exergy ∞ Physics</h1>
             <p>Exploring and expanding on humanity's collective understanding</p>
         </div>
         
@@ -491,7 +491,7 @@
                 type="text" 
                 class="search-box" 
                 id="searchBox" 
-                placeholder="Navigate the cosmos... search the universe of knowledge..."
+                placeholder="Enter search criteria..."
                 autocomplete="off"
             />
         </div>
@@ -506,6 +506,7 @@
         <div class="stats">
             <span id="conceptCount">Total concepts: 0</span>
             <span id="peopleCount">Total people: 0</span>
+            <span id="tagCount">Total tags: 0</span>
             <span id="matchCount">Matches: 0</span>
         </div>
 
@@ -643,7 +644,7 @@
             }
         }
 
-        // Build trie from tree structure, including people names
+        // Build trie from tree structure, including people names and tags
         function buildTrie(node, trie) {
             // Insert node name
             trie.insert(node.name, node);
@@ -652,6 +653,13 @@
             if (node.people && Array.isArray(node.people)) {
                 node.people.forEach(personName => {
                     trie.insert(personName, node);
+                });
+            }
+            
+            // Insert tags associated with this node
+            if (node.tags && Array.isArray(node.tags)) {
+                node.tags.forEach(tag => {
+                    trie.insert(tag, node);
                 });
             }
             
@@ -840,7 +848,14 @@
             // Label with year display
             const label = document.createElement('span');
             label.className = 'tree-label';
-            const labelText = node.year !== undefined ? `${node.name} (${node.year})` : node.name;
+            let labelText;
+            if (node.year !== undefined) {
+                // Add "-" after year for parent nodes (nodes with children)
+                const yearSuffix = hasChildren ? '-' : '';
+                labelText = `${node.name} (${node.year}${yearSuffix})`;
+            } else {
+                labelText = node.name;
+            }
             label.textContent = labelText;
             
             // Apply year color as a glow effect (text-shadow)
@@ -1061,15 +1076,34 @@
             return peopleSet.size;
         }
 
+        // Count all unique tags across all nodes
+        function countTags(node) {
+            const tagsSet = new Set();
+            
+            function collectTags(n) {
+                if (n.tags && Array.isArray(n.tags)) {
+                    n.tags.forEach(tag => tagsSet.add(tag));
+                }
+                if (n.children) {
+                    n.children.forEach(child => collectTags(child));
+                }
+            }
+            
+            collectTags(node);
+            return tagsSet.size;
+        }
+
         function updateStats() {
             if (!sampleHierarchy) {
                 return; // Data not loaded yet
             }
             const totalConcepts = countConcepts(sampleHierarchy);
             const totalPeople = countPeople(sampleHierarchy);
+            const totalTags = countTags(sampleHierarchy);
             const matchCount = matchedNodes.size;
             document.getElementById('conceptCount').textContent = `Total concepts: ${totalConcepts}`;
             document.getElementById('peopleCount').textContent = `Total people: ${totalPeople}`;
+            document.getElementById('tagCount').textContent = `Total tags: ${totalTags}`;
             document.getElementById('matchCount').textContent = `Matches: ${matchCount}`;
         }
 

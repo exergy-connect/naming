@@ -1,6 +1,6 @@
 // Physics Theories and Models Data
 const physicsData = {
-  "name": "Physics Universe as known today",
+  "name": "Physics as known today",
   "year": 2026,
   "children": [
     {
@@ -11,8 +11,8 @@ const physicsData = {
           "name": "Newtonian Mechanics",
           "year": 1687,
           "children": [
-            {"name": "Newton's Laws of Motion", "year": 1687, "summary": "Three fundamental laws describing the relationship between motion and forces.", "people": ["Isaac Newton"]},
-            {"name": "Universal Gravitation", "year": 1687, "summary": "Every particle attracts every other particle with a force proportional to their masses.", "people": ["Isaac Newton"]},
+            {"name": "Newton's Laws of Motion", "year": 1687, "summary": "Three fundamental laws describing the relationship between motion and forces.", "people": ["Isaac Newton"], "tags": ["force"]},
+            {"name": "Universal Gravitation", "year": 1687, "summary": "Every particle attracts every other particle with a force proportional to their masses.", "people": ["Isaac Newton"], "tags": ["force"]},
             {"name": "Conservation of Momentum", "year": 1644, "summary": "Total momentum of a closed system remains constant in the absence of external forces.", "people": ["René Descartes"]},
             {"name": "Conservation of Energy", "year": 1847, "summary": "Energy cannot be created or destroyed, only transformed from one form to another.", "people": ["Julius Robert von Mayer", "James Prescott Joule"]}
           ]
@@ -57,10 +57,10 @@ const physicsData = {
           "name": "Quantum Field Theory",
           "year": 1927,
           "children": [
-            {"name": "Standard Model", "year": 1975, "summary": "Theory describing three of the four fundamental forces and all known elementary particles.", "people": ["Sheldon Glashow", "Abdus Salam", "Steven Weinberg"]},
-            {"name": "Quantum Electrodynamics", "year": 1948, "summary": "Quantum field theory of electromagnetism describing interactions of light and matter.", "people": ["Richard Feynman", "Julian Schwinger", "Sin-Itiro Tomonaga"]},
-            {"name": "Quantum Chromodynamics", "year": 1973, "summary": "Theory of the strong nuclear force that binds quarks and gluons.", "people": ["Murray Gell-Mann", "Harald Fritzsch", "Heinrich Leutwyler"]},
-            {"name": "Electroweak Theory", "year": 1967, "summary": "Unified description of electromagnetic and weak nuclear forces.", "people": ["Sheldon Glashow", "Abdus Salam", "Steven Weinberg"]}
+            {"name": "Standard Model", "year": 1975, "summary": "Theory describing three of the four fundamental forces and all known elementary particles.", "people": ["Sheldon Glashow", "Abdus Salam", "Steven Weinberg"], "tags": ["force"]},
+            {"name": "Quantum Electrodynamics", "year": 1948, "summary": "Quantum field theory of electromagnetism describing interactions of light and matter.", "people": ["Richard Feynman", "Julian Schwinger", "Sin-Itiro Tomonaga"], "tags": ["force"]},
+            {"name": "Quantum Chromodynamics", "year": 1973, "summary": "Theory of the strong nuclear force that binds quarks and gluons.", "people": ["Murray Gell-Mann", "Harald Fritzsch", "Heinrich Leutwyler"], "tags": ["force"]},
+            {"name": "Electroweak Theory", "year": 1967, "summary": "Unified description of electromagnetic and weak nuclear forces.", "people": ["Sheldon Glashow", "Abdus Salam", "Steven Weinberg"], "tags": ["force"]}
           ]
         },
         {
@@ -93,7 +93,7 @@ const physicsData = {
           "name": "General Relativity",
           "year": 1915,
           "children": [
-            {"name": "Einstein Field Equations", "year": 1915, "summary": "Set of equations describing how matter and energy curve spacetime.", "people": ["Albert Einstein"]},
+            {"name": "Einstein Field Equations", "year": 1915, "summary": "Set of equations describing how matter and energy curve spacetime.", "people": ["Albert Einstein"], "tags": ["force"]},
             {"name": "Black Holes", "year": 1916, "summary": "Regions of spacetime where gravity is so strong that nothing can escape.", "people": ["Karl Schwarzschild", "Albert Einstein"]},
             {"name": "Gravitational Waves", "year": 1916, "summary": "Ripples in spacetime caused by accelerating massive objects.", "people": ["Albert Einstein"]},
             {"name": "Cosmological Models", "year": 1917, "summary": "Theoretical frameworks describing the large-scale structure and evolution of the universe.", "people": ["Albert Einstein", "Willem de Sitter", "Alexander Friedmann"]}
@@ -157,7 +157,7 @@ const physicsData = {
           "children": [
             {"name": "Maxwell's Equations", "year": 1865, "summary": "Four fundamental equations describing electricity, magnetism, and their relationship.", "people": ["James Clerk Maxwell"]},
             {"name": "Electromagnetic Waves", "year": 1865, "summary": "Oscillating electric and magnetic fields that propagate through space.", "people": ["James Clerk Maxwell", "Heinrich Hertz"]},
-            {"name": "Lorentz Force", "year": 1895, "summary": "Force experienced by a charged particle moving through electric and magnetic fields.", "people": ["Hendrik Lorentz"]},
+            {"name": "Lorentz Force", "year": 1895, "summary": "Force experienced by a charged particle moving through electric and magnetic fields.", "people": ["Hendrik Lorentz"], "tags": ["force"]},
             {"name": "Gauss's Law", "year": 1835, "summary": "Relationship between electric flux through a closed surface and enclosed charge.", "people": ["Carl Friedrich Gauss"]}
           ]
         },
@@ -193,7 +193,7 @@ const physicsData = {
           "children": [
             {"name": "Quarks", "year": 1964, "people": ["Murray Gell-Mann", "George Zweig"]},
             {"name": "Leptons", "year": 1947, "people": ["Cecil Powell"]},
-            {"name": "Gauge Bosons", "year": 1983, "people": ["Carlo Rubbia", "Simon van der Meer"]},
+            {"name": "Gauge Bosons", "year": 1983, "people": ["Carlo Rubbia", "Simon van der Meer"], "tags": ["force"]},
             {"name": "Higgs Boson", "year": 2012, "summary": "Elementary particle that gives mass to other particles through the Higgs field.", "people": ["Peter Higgs", "François Englert"]}
           ]
         },
