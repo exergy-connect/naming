@@ -586,6 +586,36 @@
                 return results;
             }
 
+            // Search for all nodes where the search term appears anywhere in any stored word
+            // This searches both node names and people names
+            searchSubstring(searchTerm) {
+                const lowerSearch = searchTerm.toLowerCase();
+                const results = [];
+                const seenNodes = new Set(); // Avoid duplicates
+                
+                // Traverse entire trie and check all stored words
+                this._searchSubstringRecursive(this.root, '', lowerSearch, results, seenNodes);
+                return results;
+            }
+
+            _searchSubstringRecursive(node, currentWord, searchTerm, results, seenNodes) {
+                // Check if current word contains the search term
+                if (node.isEndOfWord && currentWord.includes(searchTerm)) {
+                    // Add all nodes associated with this word
+                    node.nodes.forEach(treeNode => {
+                        if (!seenNodes.has(treeNode.name)) {
+                            seenNodes.add(treeNode.name);
+                            results.push(treeNode);
+                        }
+                    });
+                }
+                
+                // Continue searching children
+                for (let [char, childNode] of node.children) {
+                    this._searchSubstringRecursive(childNode, currentWord + char, searchTerm, results, seenNodes);
+                }
+            }
+
             // Helper method to collect all words from a node
             _collectAll(node, prefix, results) {
                 if (node.isEndOfWord) {
@@ -754,6 +784,15 @@
         }
 
         function renderTree(node, parentElement, searchTerm = '', visibleNodes = null) {
+            // If searching and visibleNodes is set, only render if this node is visible
+            // Root node (when parentElement is treeRoot) is always visible
+            const isRoot = parentElement.id === 'treeRoot';
+            if (visibleNodes && visibleNodes.size > 0 && !isRoot) {
+                if (!visibleNodes.has(node.name)) {
+                    return; // Don't render this node if it's not visible
+                }
+            }
+            
             const li = document.createElement('li');
             li.className = 'tree-node';
             li.dataset.nodeName = node.name;
@@ -917,13 +956,20 @@
             const visibleNodes = new Set();
             
             if (searchTerm.trim()) {
-                // Find matching nodes using trie
-                const matches = trie.search(searchTerm);
+                // Find matching nodes using trie (substring search to match both node names and people names)
+                const matches = trie.searchSubstring(searchTerm);
                 matches.forEach(node => {
                     matchedNodes.add(node.name);
-                    // Mark this node and all its ancestors as visible
+                    // Mark this node and all its ancestors as visible and expand them
                     markAncestorsVisible(node, sampleHierarchy, visibleNodes);
+                    // Also expand all ancestors to show the path
+                    expandAncestors(node, sampleHierarchy);
                 });
+                
+                // Always include root in visible nodes
+                if (sampleHierarchy) {
+                    visibleNodes.add(sampleHierarchy.name);
+                }
 
                 if (matches.length === 0) {
                     treeRoot.style.display = 'none';
@@ -933,10 +979,9 @@
                     noResults.style.display = 'none';
                 }
             } else {
-                // No search - all nodes are visible
+                // No search - all nodes are visible (empty set means show all)
                 visibleNodes.clear();
-                // Search cleared - collapse everything
-                expandedNodes.clear();
+                // Don't clear expandedNodes - let user control expansion
                 treeRoot.style.display = 'block';
                 noResults.style.display = 'none';
             }
@@ -957,6 +1002,8 @@
             if (currentNode.children) {
                 for (let child of currentNode.children) {
                     if (markAncestorsVisible(targetNode, child, visibleNodes, [...path, currentNode])) {
+                        // Also mark the current node as visible since it's in the path
+                        visibleNodes.add(currentNode.name);
                         return true;
                     }
                 }
