@@ -1,46 +1,58 @@
-# Exergy Naming
+# Exergy Physics
 
-> **An open-source exploration engine by Exergy LLC. Mapping ontologies as dynamic landscapes to navigate the adjacent possible and shape the next frontier of structure.**
+> **An interactive browser for exploring humanity's collective understanding of physics. Navigate through physics theories and concepts organized chronologically and visually mapped by their historical development.**
 
 ---
 
 ## 🔭 The Philosophy
 
-Traditional ontology tools treat data as a static archive—a rigid library of what is already known. **Exergy Naming** shifts the perspective.
-
-In thermodynamics, **Exergy** is the energy available to be used. We apply this principle to information: we view ontologies as active systems of potential. By leveraging the concept of the **Adjacent Possible**, this browser maps not only the existing nodes of a naming system but also the latent connections and "next-step" innovations that sit just beyond the current boundary.
+**Exergy Physics** presents physics knowledge as a navigable tree structure, where each concept is colored according to when it was developed—from the oldest theories (redshifted) to the most recent (blueshifted). This visualization reflects how our understanding of physics has evolved over time, creating a cosmic map of human knowledge.
 
 ## 🚀 Features
 
-* **Dynamic Landscape Mapping**: Move away from flat lists and rigid trees. View your ontology as a navigable, evolving terrain.
-* **The Adjacent Possible**: Visualization layers that highlight the "nearest neighbor" potential for expansion and naming.
-* **Standard Web Integration**: A zero-install, browser-native experience built on modern web standards.
-* **Structure Shaping**: Tools designed not just to observe, but to propose and define the next frontier of your conceptual framework.
+* **Chronological Color Mapping**: Physics concepts are visualized using a redshift-to-blueshift color scheme, where older theories appear redder and newer ones appear more violet/blue, spanning from 1637 to today.
+* **Hierarchical Organization**: Browse physics knowledge organized by major categories: Classical Mechanics, Quantum Physics, Relativity, Thermodynamics, Electromagnetism, and Particle Physics.
+* **Interactive Exploration**: Click on any concept to view detailed summaries and access Wikipedia articles for deeper learning.
+* **Smart Search**: Quickly find specific physics theories and concepts using the built-in search functionality.
+* **Year-Based Sorting**: Each hierarchy level is automatically sorted by year, showing the chronological development of physics concepts.
 
 ## 🛠️ Getting Started
 
 ### Prerequisites
 
-Since this is a standard web-based engine, you simply need a modern browser (Chrome, Firefox, Safari, or Edge).
+Since this is a standard web-based application, you simply need a modern browser (Chrome, Firefox, Safari, or Edge).
 
-Start: https://exergy-connect.github.io/naming/
+### Running Locally
+
+1. Clone or download this repository
+2. Open `index.html` in your web browser
+3. Start exploring physics concepts!
+
+The application uses:
+- `index.html` - Main application interface
+- `data.js` - Physics knowledge base with theories, years, and summaries
 
 ## 🗺️ How it Works
 
-1. **Ingest**: Load your conceptual models (JSON, Custom Schema, or API streams).
-2. **Analyze**: The engine calculates the "Exergy" of current nodes—their connectivity and descriptive power.
-3. **Explore**: Navigate the "Actual" landscape while the engine renders the "Adjacent Possible" in the periphery.
-4. **Shape**: Commit new nodes to the structure to expand the boundary of your project.
+1. **Browse**: Navigate through the hierarchical tree structure of physics concepts
+2. **Explore**: Click on parent nodes to expand and see their children
+3. **Learn**: Click on leaf nodes (individual concepts) to view summaries and access Wikipedia
+4. **Search**: Use the search bar to quickly find specific theories or concepts
+5. **Visualize**: Observe the color gradient that represents the chronological development of physics knowledge
 
 ## 🤝 Contributing
 
-We believe that the next frontier of structure is best built together. As an open-source project, we welcome contributions that:
+We welcome contributions to expand and improve this physics knowledge browser:
 
-* Enhance the visualization of conceptual landscapes.
-* Refine the algorithms used to identify the adjacent possible.
-* Improve the performance of the engine within standard web environments.
+* Add more physics concepts and theories to the knowledge base
+* Improve summaries and descriptions of existing concepts
+* Enhance the visualization and user interface
+* Add new features for exploring physics knowledge
 
-Please see [CONTRIBUTING.md](https://www.google.com/search?q=CONTRIBUTING.md) for our community guidelines.
+To contribute:
+1. Add or update entries in `data.js` following the existing structure
+2. Each concept should include: `name`, `year`, and optionally `summary`
+3. Ensure proper hierarchical organization within the existing categories
 
 ## 📄 License
 

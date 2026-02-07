@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exergy Physics - Cosmic Navigator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0e27;
+            background-image: 
+                radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+                radial-gradient(2px 2px at 60% 70%, #fff, transparent),
+                radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+                radial-gradient(1px 1px at 80% 10%, #fff, transparent),
+                radial-gradient(2px 2px at 90% 60%, #fff, transparent),
+                radial-gradient(1px 1px at 33% 80%, #fff, transparent),
+                radial-gradient(2px 2px at 10% 40%, #fff, transparent),
+                radial-gradient(1px 1px at 70% 20%, #fff, transparent);
+            background-size: 200% 200%, 150% 150%, 180% 180%, 120% 120%, 160% 160%, 140% 140%, 130% 130%, 110% 110%;
+            background-position: 0% 0%, 20% 20%, 40% 40%, 60% 60%, 80% 80%, 100% 100%, 0% 100%, 100% 0%;
+            animation: float 20s ease-in-out infinite;
+            height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(119, 198, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(15, 20, 40, 0.95);
+            border-radius: 16px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(120, 119, 198, 0.2),
+                inset 0 0 60px rgba(120, 119, 198, 0.05);
+            overflow: hidden;
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            position: relative;
+            z-index: 1;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1f3a 0%, #2d1b3d 50%, #1a1f3a 100%);
+            color: #fff;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(120, 119, 198, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+            color: #b8b8ff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-container {
+            padding: 30px;
+            background: rgba(20, 25, 45, 0.8);
+            border-bottom: 1px solid rgba(120, 119, 198, 0.2);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid rgba(120, 119, 198, 0.4);
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(10, 14, 27, 0.6);
+            color: #fff;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-box::placeholder {
+            color: rgba(184, 184, 255, 0.5);
+        }
+
+        .search-box:focus {
+            border-color: rgba(184, 184, 255, 0.8);
+            box-shadow: 
+                0 0 0 3px rgba(120, 119, 198, 0.2),
+                0 0 20px rgba(120, 119, 198, 0.3),
+                inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tree-container {
+            padding: 30px;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: rgba(15, 20, 40, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tree-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tree-container::-webkit-scrollbar-track {
+            background: rgba(10, 14, 27, 0.5);
+        }
+
+        .tree-container::-webkit-scrollbar-thumb {
+            background: rgba(120, 119, 198, 0.4);
+            border-radius: 4px;
+        }
+
+        .tree-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(120, 119, 198, 0.6);
+        }
+
+        .tree {
+            list-style: none;
+            overflow: visible;
+            height: 100%;
+        }
+
+        .tree-node {
+            margin: 8px 0;
+        }
+
+        .tree-node-content {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            background: rgba(15, 20, 40, 0.3);
+            position: relative;
+            overflow: visible;
+        }
+
+        .tree-node-content:hover {
+            background: rgba(120, 119, 198, 0.15);
+            box-shadow: 0 0 15px rgba(120, 119, 198, 0.3);
+            transform: translateX(3px);
+        }
+
+        .tree-node-content.highlight {
+            background: rgba(255, 193, 7, 0.15);
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+        }
+
+        .tree-node-content.matched {
+            background: rgba(40, 167, 69, 0.15);
+            box-shadow: 0 0 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .tree-toggle {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(120, 119, 198, 0.6);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(120, 119, 198, 0.4);
+        }
+
+        .tree-toggle:hover {
+            background: rgba(184, 184, 255, 0.8);
+            box-shadow: 0 0 15px rgba(120, 119, 198, 0.6);
+            transform: scale(1.1);
+        }
+
+        .tree-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .tree-toggle.no-children {
+            background: transparent;
+            cursor: default;
+            color: rgba(184, 184, 255, 0.6);
+            box-shadow: none;
+            font-size: 16px;
+        }
+
+        .tree-label {
+            font-size: 1em;
+            color: #e0e0ff;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .tree-label:hover {
+            opacity: 0.8;
+        }
+
+        .tree-tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tree-tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 20, 40, 0.98);
+            color: rgba(184, 184, 255, 0.95);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-style: italic;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 10000;
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+            max-width: 300px;
+            min-width: 200px;
+            white-space: normal;
+            text-align: left;
+            visibility: hidden;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .tree-tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tree-children {
+            margin-left: 30px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .tree-children.hidden {
+            display: none;
+        }
+
+        .stats {
+            padding: 15px 30px;
+            background: rgba(20, 25, 45, 0.8);
+            border-top: 1px solid rgba(120, 119, 198, 0.2);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #b8b8ff;
+        }
+
+        .copyright {
+            padding: 15px 30px;
+            background: rgba(10, 14, 27, 0.8);
+            border-top: 1px solid rgba(120, 119, 198, 0.1);
+            text-align: center;
+            font-size: 0.85em;
+            color: rgba(184, 184, 255, 0.6);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: rgba(184, 184, 255, 0.5);
+            font-size: 1.1em;
+        }
+
+        .context-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .context-modal.active {
+            display: flex;
+        }
+
+        .context-modal-content {
+            background: rgba(15, 20, 40, 0.98);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+
+        .context-modal-header {
+            margin-bottom: 20px;
+        }
+
+        .context-modal-title {
+            font-size: 1.5em;
+            color: #e0e0ff;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .context-modal-year {
+            font-size: 1em;
+            color: rgba(184, 184, 255, 0.7);
+            margin-bottom: 15px;
+        }
+
+        .context-modal-summary {
+            font-size: 1em;
+            color: rgba(184, 184, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .context-modal-people {
+            margin-bottom: 25px;
+        }
+
+        .context-modal-people-label {
+            font-size: 0.9em;
+            color: rgba(184, 184, 255, 0.7);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .context-modal-people-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .context-modal-person {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(120, 119, 198, 0.2);
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            border-radius: 6px;
+            color: rgba(184, 184, 255, 0.9);
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .context-modal-person:hover {
+            background: rgba(120, 119, 198, 0.4);
+            border-color: rgba(120, 119, 198, 0.6);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(120, 119, 198, 0.3);
+        }
+
+        .context-modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .context-modal-button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .context-modal-button.primary {
+            background: rgba(120, 119, 198, 0.8);
+            color: #fff;
+        }
+
+        .context-modal-button.primary:hover {
+            background: rgba(120, 119, 198, 1);
+            box-shadow: 0 0 15px rgba(120, 119, 198, 0.5);
+        }
+
+        .context-modal-button.secondary {
+            background: rgba(60, 60, 80, 0.6);
+            color: rgba(184, 184, 255, 0.9);
+        }
+
+        .context-modal-button.secondary:hover {
+            background: rgba(60, 60, 80, 0.8);
+        }
+
+        .context-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: rgba(184, 184, 255, 0.7);
+            font-size: 1.5em;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .context-modal-close:hover {
+            background: rgba(120, 119, 198, 0.2);
+            color: rgba(184, 184, 255, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌌 Exergy Physics</h1>
+            <p>Exploring and expanding on humanity's collective understanding</p>
+        </div>
+        
+        <div class="search-container">
+            <input 
+                type="text" 
+                class="search-box" 
+                id="searchBox" 
+                placeholder="Navigate the cosmos... search the universe of knowledge..."
+                autocomplete="off"
+            />
+        </div>
+
+        <div class="tree-container">
+            <ul class="tree" id="treeRoot"></ul>
+            <div class="no-results" id="noResults" style="display: none;">
+                No results found
+            </div>
+        </div>
+
+        <div class="stats">
+            <span id="conceptCount">Total concepts: 0</span>
+            <span id="peopleCount">Total people: 0</span>
+            <span id="matchCount">Matches: 0</span>
+        </div>
+
+        <div class="copyright">
+            © 2026 Exergy ∞ LLC
+        </div>
+    </div>
+
+    <!-- Context Modal -->
+    <div class="context-modal" id="contextModal">
+        <div class="context-modal-content">
+            <button class="context-modal-close" id="contextModalClose">&times;</button>
+            <div class="context-modal-header">
+                <div class="context-modal-title" id="contextModalTitle"></div>
+                <div class="context-modal-year" id="contextModalYear"></div>
+            </div>
+            <div class="context-modal-summary" id="contextModalSummary"></div>
+            <div class="context-modal-people" id="contextModalPeople"></div>
+            <div class="context-modal-actions">
+                <button class="context-modal-button secondary" id="contextModalCancel">Cancel</button>
+                <button class="context-modal-button primary" id="contextModalWikipedia">Open Wikipedia</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // Global variable to hold the loaded hierarchy data
+        let sampleHierarchy = null;
+
+        // Trie Node class
+        class TrieNode {
+            constructor() {
+                this.children = new Map();
+                this.isEndOfWord = false;
+                this.nodes = []; // Store references to tree nodes that end here
+            }
+        }
+
+        // Trie data structure
+        class Trie {
+            constructor() {
+                this.root = new TrieNode();
+            }
+
+            // Insert a word into the trie with a reference to the tree node
+            insert(word, treeNode) {
+                let current = this.root;
+                const lowerWord = word.toLowerCase();
+                
+                for (let char of lowerWord) {
+                    if (!current.children.has(char)) {
+                        current.children.set(char, new TrieNode());
+                    }
+                    current = current.children.get(char);
+                }
+                
+                current.isEndOfWord = true;
+                current.nodes.push(treeNode);
+            }
+
+            // Search for all words that start with the given prefix
+            search(prefix) {
+                let current = this.root;
+                const lowerPrefix = prefix.toLowerCase();
+                
+                // Navigate to the prefix node
+                for (let char of lowerPrefix) {
+                    if (!current.children.has(char)) {
+                        return [];
+                    }
+                    current = current.children.get(char);
+                }
+                
+                // Collect all words from this node
+                const results = [];
+                this._collectAll(current, lowerPrefix, results);
+                return results;
+            }
+
+            // Helper method to collect all words from a node
+            _collectAll(node, prefix, results) {
+                if (node.isEndOfWord) {
+                    results.push(...node.nodes);
+                }
+                
+                for (let [char, childNode] of node.children) {
+                    this._collectAll(childNode, prefix + char, results);
+                }
+            }
+
+            // Check if a prefix exists in the trie
+            hasPrefix(prefix) {
+                let current = this.root;
+                const lowerPrefix = prefix.toLowerCase();
+                
+                for (let char of lowerPrefix) {
+                    if (!current.children.has(char)) {
+                        return false;
+                    }
+                    current = current.children.get(char);
+                }
+                
+                return true;
+            }
+        }
+
+        // Build trie from tree structure, including people names
+        function buildTrie(node, trie) {
+            // Insert node name
+            trie.insert(node.name, node);
+            
+            // Insert people names associated with this node
+            if (node.people && Array.isArray(node.people)) {
+                node.people.forEach(personName => {
+                    trie.insert(personName, node);
+                });
+            }
+            
+            if (node.children) {
+                node.children.forEach(child => {
+                    buildTrie(child, trie);
+                });
+            }
+        }
+
+        // Global variables
+        let trie = null;
+        let expandedNodes = new Set();
+        let matchedNodes = new Set();
+        let minYear = Infinity;
+        let maxYear = -Infinity;
+        let expandedBeforeSearch = new Set(); // Track nodes expanded before search
+
+        // Find min and max years in the data (excluding root node)
+        // Use a reasonable minimum year to ensure the oldest meaningful terms map to red
+        function findYearRange(node, isRoot = true) {
+            // Skip root node's year - only use actual physics terms
+            if (!isRoot && node.year !== undefined) {
+                minYear = Math.min(minYear, node.year);
+                maxYear = Math.max(maxYear, node.year);
+            }
+            if (node.children) {
+                node.children.forEach(child => findYearRange(child, false));
+            }
+        }
+
+        // Map year to color (redshifted for old, blueshifted for recent)
+        // Uses HSL color space: red (0°) -> yellow (60°) -> green (120°) -> cyan (180°) -> blue (240°) -> violet (270°)
+        function yearToColor(year) {
+            if (year === undefined || minYear === Infinity) {
+                return '#e0e0ff'; // Default color
+            }
+            
+            // Use today's year (2026) as the maximum to map to the violet end of the spectrum
+            const currentYear = 2026;
+            const maxYearForMapping = currentYear;
+            
+            // Normalize year to 0-1 range: minimum year from data -> today
+            // Ensure we have a valid range
+            const yearRange = maxYearForMapping - minYear;
+            if (yearRange <= 0) {
+                return '#e0e0ff'; // Default color if invalid range
+            }
+            
+            const normalized = (year - minYear) / yearRange;
+            
+            // Clamp normalized value to [0, 1] in case any data is newer than current year
+            const clampedNormalized = Math.max(0, Math.min(1, normalized));
+            
+            // Map to hue: red (0°) for old -> violet (270°) for recent
+            // We'll use 0° to 270° to cover red -> yellow -> green -> cyan -> blue -> violet
+            const hue = 270 * clampedNormalized; // Old = red (0°), recent = violet (270°)
+            
+            // Use high saturation and medium lightness for vibrant colors
+            const saturation = 70 + (clampedNormalized * 20); // 70-90%
+            const lightness = 50 + (clampedNormalized * 10); // 50-60%
+            
+            return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        }
+
+        // Sort children by year at each hierarchy level
+        function sortByYear(node) {
+            if (node.children) {
+                // Sort children by year (ascending - oldest first)
+                node.children.sort((a, b) => {
+                    const yearA = a.year !== undefined ? a.year : Infinity;
+                    const yearB = b.year !== undefined ? b.year : Infinity;
+                    return yearA - yearB;
+                });
+                // Recursively sort children
+                node.children.forEach(child => sortByYear(child));
+            }
+        }
+
+        // Set parent years to minimum of children (except root)
+        function setParentYears(node, isRoot = true) {
+            if (node.children && node.children.length > 0) {
+                // Recursively process children first
+                node.children.forEach(child => setParentYears(child, false));
+                
+                // Find minimum year among children
+                const childYears = node.children
+                    .map(child => child.year)
+                    .filter(year => year !== undefined);
+                
+                if (childYears.length > 0 && !isRoot) {
+                    const minChildYear = Math.min(...childYears);
+                    node.year = minChildYear;
+                }
+            }
+        }
+
+        // Initialize data from script-loaded data.js
+        function initializeData() {
+            if (typeof physicsData === 'undefined') {
+                console.error('physicsData is not defined. Make sure data.js is loaded.');
+                document.getElementById('treeRoot').innerHTML = 
+                    '<div class="no-results">Error: data.js not loaded. Please ensure data.js is available.</div>';
+                return;
+            }
+
+            // Use the original data directly
+            sampleHierarchy = physicsData;
+            
+            // Set parent years to minimum of children (except root which stays at 2026)
+            setParentYears(sampleHierarchy, true);
+            
+            // Sort each hierarchy level by year
+            sortByYear(sampleHierarchy);
+            
+            // Find year range for color mapping (excluding root node)
+            minYear = Infinity;
+            maxYear = -Infinity;
+            findYearRange(sampleHierarchy, true);
+            
+            // Debug: log the year range
+            console.log('Year range for color mapping:', { minYear, maxYear, currentYear: 2026 });
+            
+            // Initialize trie with loaded data
+            trie = new Trie();
+            buildTrie(sampleHierarchy, trie);
+            
+            // Initialize tree display
+            updateTree();
+        }
+
+        function renderTree(node, parentElement, searchTerm = '', visibleNodes = null) {
+            const li = document.createElement('li');
+            li.className = 'tree-node';
+            li.dataset.nodeName = node.name;
+
+            const content = document.createElement('div');
+            content.className = 'tree-node-content';
+            
+            const hasChildren = node.children && node.children.length > 0;
+            const isExpanded = expandedNodes.has(node.name);
+            const isMatched = matchedNodes.has(node.name);
+            const isHighlighted = searchTerm && node.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+            // Apply year-based color (preserved even when matched/highlighted)
+            if (node.year !== undefined) {
+                const yearColor = yearToColor(node.year);
+                // Use year color for border, but adjust opacity based on state
+                const opacity = isMatched || isHighlighted ? '60' : '40';
+                content.style.borderLeft = `4px solid ${yearColor}`;
+                content.style.boxShadow = `0 0 10px ${yearColor}${opacity}`;
+            }
+
+            if (isMatched) {
+                content.classList.add('matched');
+            } else if (isHighlighted) {
+                content.classList.add('highlight');
+            }
+
+            // Toggle button
+            const toggle = document.createElement('span');
+            toggle.className = 'tree-toggle';
+            if (!hasChildren) {
+                toggle.classList.add('no-children');
+                toggle.textContent = '•';
+            } else {
+                toggle.textContent = isExpanded ? '▼' : '▶';
+                if (!isExpanded) {
+                    toggle.classList.add('collapsed');
+                }
+                toggle.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleNode(node.name);
+                };
+            }
+
+            // Label with year display
+            const label = document.createElement('span');
+            label.className = 'tree-label';
+            const labelText = node.year !== undefined ? `${node.name} (${node.year})` : node.name;
+            label.textContent = labelText;
+            
+            // Apply year color as a glow effect (text-shadow)
+            if (node.year !== undefined) {
+                const yearColor = yearToColor(node.year);
+                // Create a glow effect using text-shadow with multiple layers
+                label.style.textShadow = `
+                    0 0 5px ${yearColor},
+                    0 0 10px ${yearColor},
+                    0 0 15px ${yearColor}80,
+                    0 0 20px ${yearColor}60
+                `;
+            }
+            
+            // Handle click: toggle for parents, open context modal for leaf nodes
+            const handleClick = (e) => {
+                // Don't stop propagation if clicking on toggle button (it has its own handler)
+                if (e.target.classList.contains('tree-toggle')) {
+                    return;
+                }
+                e.stopPropagation();
+                if (hasChildren) {
+                    toggleNode(node.name);
+                } else {
+                    // Leaf node - open context modal
+                    openContextModal(node);
+                }
+            };
+            
+            // Make both label and content clickable
+            label.onclick = handleClick;
+            content.onclick = handleClick;
+            
+            // Style leaf nodes to look clickable
+            if (!hasChildren) {
+                label.style.cursor = 'pointer';
+                label.style.textDecoration = 'underline';
+                label.style.textDecorationColor = 'rgba(184, 184, 255, 0.3)';
+                content.style.cursor = 'pointer';
+                
+                // Add tooltip for leaf nodes with summaries
+                if (node.summary) {
+                    // Add tooltip to the content div for better positioning
+                    content.classList.add('tree-tooltip');
+                    content.setAttribute('data-tooltip', node.summary);
+                    // Also add title attribute as fallback
+                    label.setAttribute('title', node.summary);
+                }
+            } else {
+                // Parent nodes should also look clickable
+                content.style.cursor = 'pointer';
+            }
+
+            content.appendChild(toggle);
+            content.appendChild(label);
+            li.appendChild(content);
+
+            // Children
+            if (hasChildren) {
+                const childrenUl = document.createElement('ul');
+                childrenUl.className = 'tree-children';
+                if (!isExpanded) {
+                    childrenUl.classList.add('hidden');
+                }
+
+                // If searching, only show children that are matched or are ancestors of matched nodes
+                // If not searching, show all children
+                const childrenToShow = visibleNodes && visibleNodes.size > 0
+                    ? node.children.filter(child => visibleNodes.has(child.name))
+                    : node.children;
+
+                childrenToShow.forEach(child => {
+                    renderTree(child, childrenUl, searchTerm, visibleNodes);
+                });
+
+                li.appendChild(childrenUl);
+            }
+
+            parentElement.appendChild(li);
+        }
+
+        function toggleNode(nodeName) {
+            if (expandedNodes.has(nodeName)) {
+                expandedNodes.delete(nodeName);
+            } else {
+                expandedNodes.add(nodeName);
+            }
+            updateTree();
+        }
+
+        function updateTree(searchTerm = '') {
+            if (!sampleHierarchy || !trie) {
+                return; // Data not loaded yet
+            }
+
+            const treeRoot = document.getElementById('treeRoot');
+            const noResults = document.getElementById('noResults');
+            treeRoot.innerHTML = '';
+
+            // If search is cleared, restore previous expansion state
+            if (!searchTerm.trim() && expandedBeforeSearch.size > 0) {
+                expandedNodes = new Set(expandedBeforeSearch);
+                expandedBeforeSearch.clear();
+            }
+            // If starting a new search, save current expansion state
+            else if (searchTerm.trim() && expandedBeforeSearch.size === 0) {
+                expandedBeforeSearch = new Set(expandedNodes);
+            }
+
+            matchedNodes.clear();
+
+            // Build set of nodes that should be visible (matched nodes and their ancestors)
+            const visibleNodes = new Set();
+            
+            if (searchTerm.trim()) {
+                // Find matching nodes using trie
+                const matches = trie.search(searchTerm);
+                matches.forEach(node => {
+                    matchedNodes.add(node.name);
+                    // Mark this node and all its ancestors as visible
+                    markAncestorsVisible(node, sampleHierarchy, visibleNodes);
+                });
+
+                if (matches.length === 0) {
+                    treeRoot.style.display = 'none';
+                    noResults.style.display = 'block';
+                } else {
+                    treeRoot.style.display = 'block';
+                    noResults.style.display = 'none';
+                }
+            } else {
+                // No search - all nodes are visible
+                visibleNodes.clear();
+                // Search cleared - collapse everything
+                expandedNodes.clear();
+                treeRoot.style.display = 'block';
+                noResults.style.display = 'none';
+            }
+
+            renderTree(sampleHierarchy, treeRoot, searchTerm, visibleNodes);
+            updateStats();
+        }
+
+        // Mark a node and all its ancestors as visible
+        function markAncestorsVisible(targetNode, currentNode, visibleNodes, path = []) {
+            if (currentNode === targetNode) {
+                // Mark this node and all nodes in the path as visible
+                path.forEach(node => visibleNodes.add(node.name));
+                visibleNodes.add(targetNode.name);
+                return true;
+            }
+
+            if (currentNode.children) {
+                for (let child of currentNode.children) {
+                    if (markAncestorsVisible(targetNode, child, visibleNodes, [...path, currentNode])) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        function expandAncestors(targetNode, currentNode, path = []) {
+            if (currentNode === targetNode) {
+                // Expand all nodes in the path
+                path.forEach(node => expandedNodes.add(node.name));
+                return true;
+            }
+
+            if (currentNode.children) {
+                for (let child of currentNode.children) {
+                    if (expandAncestors(targetNode, child, [...path, currentNode])) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        // Count only leaf nodes (concepts, not categories)
+        function countConcepts(node) {
+            if (!node.children || node.children.length === 0) {
+                // Leaf node - this is a concept
+                return 1;
+            }
+            // Parent node - count its children
+            let count = 0;
+            node.children.forEach(child => {
+                count += countConcepts(child);
+            });
+            return count;
+        }
+
+        // Count all unique people across all nodes
+        function countPeople(node) {
+            const peopleSet = new Set();
+            
+            function collectPeople(n) {
+                if (n.people && Array.isArray(n.people)) {
+                    n.people.forEach(person => peopleSet.add(person));
+                }
+                if (n.children) {
+                    n.children.forEach(child => collectPeople(child));
+                }
+            }
+            
+            collectPeople(node);
+            return peopleSet.size;
+        }
+
+        function updateStats() {
+            if (!sampleHierarchy) {
+                return; // Data not loaded yet
+            }
+            const totalConcepts = countConcepts(sampleHierarchy);
+            const totalPeople = countPeople(sampleHierarchy);
+            const matchCount = matchedNodes.size;
+            document.getElementById('conceptCount').textContent = `Total concepts: ${totalConcepts}`;
+            document.getElementById('peopleCount').textContent = `Total people: ${totalPeople}`;
+            document.getElementById('matchCount').textContent = `Matches: ${matchCount}`;
+        }
+
+        // Context Modal Functions
+        let currentModalNode = null;
+
+        // Helper function to find a node by name in the hierarchy
+        function findNodeByName(node, name) {
+            if (node.name === name) {
+                return node;
+            }
+            if (node.children) {
+                for (let child of node.children) {
+                    const found = findNodeByName(child, name);
+                    if (found) return found;
+                }
+            }
+            return null;
+        }
+
+        function openContextModal(node) {
+            // Find the full node from the hierarchy to ensure we have all properties including summary
+            // The node passed in should already have all properties, but we'll verify by looking it up
+            let nodeToUse = node;
+            
+            // Try to find it in the hierarchy to ensure we have the complete node
+            if (sampleHierarchy) {
+                const foundNode = findNodeByName(sampleHierarchy, node.name);
+                if (foundNode) {
+                    nodeToUse = foundNode;
+                }
+            }
+            
+            currentModalNode = nodeToUse;
+            
+            const modal = document.getElementById('contextModal');
+            const title = document.getElementById('contextModalTitle');
+            const year = document.getElementById('contextModalYear');
+            const summary = document.getElementById('contextModalSummary');
+            const peopleContainer = document.getElementById('contextModalPeople');
+
+            title.textContent = nodeToUse.name;
+            if (nodeToUse.year !== undefined) {
+                year.textContent = `Year: ${nodeToUse.year}`;
+            } else {
+                year.textContent = '';
+            }
+
+            // Check for summary property - it should be directly on the node
+            if (nodeToUse.summary && typeof nodeToUse.summary === 'string' && nodeToUse.summary.trim() !== '') {
+                summary.textContent = nodeToUse.summary;
+                summary.style.display = 'block';
+            } else {
+                summary.textContent = 'No summary available.';
+                summary.style.display = 'block';
+            }
+
+            // Display people
+            peopleContainer.innerHTML = '';
+            if (nodeToUse.people && Array.isArray(nodeToUse.people) && nodeToUse.people.length > 0) {
+                const peopleLabel = document.createElement('div');
+                peopleLabel.className = 'context-modal-people-label';
+                peopleLabel.textContent = 'Key People:';
+                peopleContainer.appendChild(peopleLabel);
+
+                const peopleList = document.createElement('div');
+                peopleList.className = 'context-modal-people-list';
+
+                nodeToUse.people.forEach(personName => {
+                    const personLink = document.createElement('a');
+                    personLink.className = 'context-modal-person';
+                    personLink.textContent = personName;
+                    personLink.href = `https://en.wikipedia.org/wiki/${encodeURIComponent(personName)}`;
+                    personLink.target = '_blank';
+                    personLink.rel = 'noopener noreferrer';
+                    peopleList.appendChild(personLink);
+                });
+
+                peopleContainer.appendChild(peopleList);
+                peopleContainer.style.display = 'block';
+            } else {
+                peopleContainer.style.display = 'none';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeContextModal() {
+            const modal = document.getElementById('contextModal');
+            modal.classList.remove('active');
+            currentModalNode = null;
+        }
+
+        // Convert name to Wikipedia URL format (spaces to underscores, handle apostrophes)
+        function nameToWikipediaUrl(name) {
+            // Replace spaces with underscores (Wikipedia's format)
+            // Keep apostrophes but they'll be encoded by encodeURIComponent
+            return name.replace(/\s+/g, '_');
+        }
+
+        function openWikipedia() {
+            if (currentModalNode) {
+                // Use underscores instead of spaces for better Wikipedia compatibility
+                const wikiName = nameToWikipediaUrl(currentModalNode.name);
+                const wikipediaUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(wikiName)}`;
+                window.open(wikipediaUrl, '_blank');
+                closeContextModal();
+            }
+        }
+
+        // Modal event listeners
+        document.getElementById('contextModalClose').addEventListener('click', closeContextModal);
+        document.getElementById('contextModalCancel').addEventListener('click', closeContextModal);
+        document.getElementById('contextModalWikipedia').addEventListener('click', openWikipedia);
+
+        // Close modal when clicking outside
+        document.getElementById('contextModal').addEventListener('click', (e) => {
+            if (e.target.id === 'contextModal') {
+                closeContextModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeContextModal();
+            }
+        });
+
+        // Search box event listener
+        const searchBox = document.getElementById('searchBox');
+        searchBox.addEventListener('input', (e) => {
+            const searchTerm = e.target.value;
+            updateTree(searchTerm);
+        });
+
+        // Initialize data on startup (data.js is loaded via script tag)
+        initializeData();
+    </script>
+</body>
+</html>
