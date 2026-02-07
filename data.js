@@ -119,10 +119,11 @@ const physicsData = {
           "name": "Classical Thermodynamics",
           "year": 1850,
           "children": [
-            {"name": "Laws of Thermodynamics", "year": 1850, "summary": "Four fundamental laws governing energy, entropy, and temperature in thermodynamic systems.", "people": ["Rudolf Clausius", "William Thomson"], "tags": [{"name": "time", "explanation": "The second law establishes the arrow of time by stating that entropy increases over time, giving time its directionality."}]},
-            {"name": "Entropy", "year": 1865, "summary": "Measure of disorder or randomness in a system, central to the second law of thermodynamics.", "people": ["Rudolf Clausius"], "tags": [{"name": "time", "explanation": "Entropy's increase over time defines the arrow of time, explaining why processes are irreversible and why we remember the past but not the future."}]},
-            {"name": "Heat Engines", "year": 1824, "summary": "Devices that convert thermal energy into mechanical work through cyclic processes.", "people": ["Sadi Carnot"]},
-            {"name": "Carnot Cycle", "year": 1824, "summary": "Theoretical reversible thermodynamic cycle that defines the maximum possible efficiency for a heat engine.", "people": ["Sadi Carnot"]}
+            {"name": "Laws of Thermodynamics", "year": 1850, "summary": "Four fundamental laws governing energy, entropy, and temperature in thermodynamic systems.", "people": ["Rudolf Clausius", "William Thomson"], "tags": [{"name": "time", "explanation": "The second law establishes the arrow of time by stating that entropy increases over time, giving time its directionality."}, {"name": "exergy", "explanation": "The laws of thermodynamics, particularly the second law, are fundamental to understanding exergy, which measures the maximum useful work obtainable from a system."}]},
+            {"name": "Entropy", "year": 1865, "summary": "Measure of disorder or randomness in a system, central to the second law of thermodynamics.", "people": ["Rudolf Clausius"], "tags": [{"name": "time", "explanation": "Entropy's increase over time defines the arrow of time, explaining why processes are irreversible and why we remember the past but not the future."}, {"name": "exergy", "explanation": "Entropy is directly related to exergy destruction - the greater the entropy generation, the more exergy is destroyed in a process."}]},
+            {"name": "Heat Engines", "year": 1824, "summary": "Devices that convert thermal energy into mechanical work through cyclic processes.", "people": ["Sadi Carnot"], "tags": [{"name": "exergy", "explanation": "Heat engines convert exergy (available energy) into useful work, with efficiency limited by exergy destruction due to irreversibilities."}]},
+            {"name": "Carnot Cycle", "year": 1824, "summary": "Theoretical reversible thermodynamic cycle that defines the maximum possible efficiency for a heat engine.", "people": ["Sadi Carnot"], "tags": [{"name": "exergy", "explanation": "The Carnot cycle represents the ideal case where all exergy is converted to work with no exergy destruction, achieving maximum exergy efficiency."}]},
+            {"name": "Exergy", "year": 1956, "summary": "Maximum useful work obtainable from a system as it reaches equilibrium with its environment. Also known as available energy or availability.", "people": ["Zoran Rant"], "tags": [{"name": "exergy", "explanation": "Exergy is the measure of the maximum useful work that can be extracted from a system, measuring energy quality and potential for conversion to work."}]}
           ]
         },
         {
@@ -139,10 +140,10 @@ const physicsData = {
           "name": "Non-Equilibrium Thermodynamics",
           "year": 1931,
           "children": [
-            {"name": "Onsager reciprocal relations", "year": 1931, "summary": "Symmetry relations between transport coefficients in systems near thermodynamic equilibrium.", "people": ["Lars Onsager"]},
-            {"name": "Fluctuation-Dissipation Theorem", "year": 1951, "summary": "Theorem connecting the response of a system to external perturbations with its internal fluctuations.", "people": ["Herbert Callen", "Theodore Welton"]},
+            {"name": "Onsager reciprocal relations", "year": 1931, "summary": "Symmetry relations between transport coefficients in systems near thermodynamic equilibrium.", "people": ["Lars Onsager"], "tags": [{"name": "exergy", "explanation": "Onsager relations describe irreversible processes that lead to exergy destruction in non-equilibrium systems."}]},
+            {"name": "Fluctuation-Dissipation Theorem", "year": 1951, "summary": "Theorem connecting the response of a system to external perturbations with its internal fluctuations.", "people": ["Herbert Callen", "Theodore Welton"], "tags": [{"name": "exergy", "explanation": "Fluctuations and dissipation processes are directly related to exergy destruction in thermodynamic systems."}]},
             {"name": "Brownian Motion", "year": 1905, "summary": "Random motion of particles suspended in a fluid resulting from collisions with surrounding molecules.", "people": ["Albert Einstein", "Marian Smoluchowski"]},
-            {"name": "Diffusion Processes", "year": 1905, "summary": "Process by which particles spread from regions of high concentration to regions of low concentration.", "people": ["Albert Einstein", "Adolf Fick"]}
+            {"name": "Diffusion Processes", "year": 1905, "summary": "Process by which particles spread from regions of high concentration to regions of low concentration.", "people": ["Albert Einstein", "Adolf Fick"], "tags": [{"name": "exergy", "explanation": "Diffusion processes involve exergy destruction as concentration gradients are dissipated, reducing the system's capacity to do work."}]}
           ]
         }
       ]
