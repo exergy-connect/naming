@@ -420,6 +420,120 @@
             box-shadow: 0 4px 8px rgba(120, 119, 198, 0.3);
         }
 
+        .context-modal-tags {
+            margin-bottom: 25px;
+        }
+
+        .context-modal-tags-label {
+            font-size: 0.9em;
+            color: rgba(184, 184, 255, 0.7);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .context-modal-tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .context-modal-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(120, 119, 198, 0.2);
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            border-radius: 6px;
+            color: rgba(184, 184, 255, 0.9);
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .context-modal-tag:hover {
+            background: rgba(120, 119, 198, 0.4);
+            border-color: rgba(120, 119, 198, 0.6);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(120, 119, 198, 0.3);
+        }
+
+        .context-modal-tag-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: rgba(15, 20, 40, 0.98);
+            color: rgba(184, 184, 255, 0.9);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            font-size: 0.85em;
+            line-height: 1.4;
+            width: 400px;
+            max-width: 400px;
+            white-space: normal;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+        }
+
+        .context-modal-tag:hover .context-modal-tag-tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-12px);
+        }
+
+        .context-modal-tag-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: rgba(120, 119, 198, 0.4);
+        }
+
+        .context-modal-papers {
+            margin-bottom: 25px;
+        }
+
+        .context-modal-papers-label {
+            font-size: 0.9em;
+            color: rgba(184, 184, 255, 0.7);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .context-modal-papers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .context-modal-paper {
+            display: inline-block;
+            padding: 8px 14px;
+            background: rgba(120, 119, 198, 0.15);
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            border-radius: 6px;
+            color: rgba(184, 184, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .context-modal-paper:hover {
+            background: rgba(120, 119, 198, 0.3);
+            border-color: rgba(120, 119, 198, 0.5);
+            color: #fff;
+            transform: translateX(3px);
+        }
+
         .context-modal-actions {
             display: flex;
             gap: 15px;
@@ -507,6 +621,7 @@
             <span id="conceptCount">Total concepts: 0</span>
             <span id="peopleCount">Total people: 0</span>
             <span id="tagCount">Total tags: 0</span>
+            <span id="paperCount">Total papers: 0</span>
             <span id="matchCount">Matches: 0</span>
         </div>
 
@@ -524,7 +639,9 @@
                 <div class="context-modal-year" id="contextModalYear"></div>
             </div>
             <div class="context-modal-summary" id="contextModalSummary"></div>
+            <div class="context-modal-tags" id="contextModalTags"></div>
             <div class="context-modal-people" id="contextModalPeople"></div>
+            <div class="context-modal-papers" id="contextModalPapers"></div>
             <div class="context-modal-actions">
                 <button class="context-modal-button secondary" id="contextModalCancel">Cancel</button>
                 <button class="context-modal-button primary" id="contextModalWikipedia">Open Wikipedia</button>
@@ -596,6 +713,7 @@
                 
                 // Traverse entire trie and check all stored words
                 this._searchSubstringRecursive(this.root, '', lowerSearch, results, seenNodes);
+                
                 return results;
             }
 
@@ -659,7 +777,9 @@
             // Insert tags associated with this node
             if (node.tags && Array.isArray(node.tags)) {
                 node.tags.forEach(tag => {
-                    trie.insert(tag, node);
+                    // Handle both string tags (legacy) and object tags with name and explanation
+                    const tagName = typeof tag === 'string' ? tag : tag.name;
+                    trie.insert(tagName, node);
                 });
             }
             
@@ -677,6 +797,8 @@
         let minYear = Infinity;
         let maxYear = -Infinity;
         let expandedBeforeSearch = new Set(); // Track nodes expanded before search
+        let manuallyExpandedDuringSearch = new Set(); // Track nodes manually expanded during search
+        let previousSearchTerm = ''; // Track previous search term to detect transitions
 
         // Find min and max years in the data (excluding root node)
         // Use a reasonable minimum year to ensure the oldest meaningful terms map to red
@@ -781,7 +903,6 @@
             findYearRange(sampleHierarchy, true);
             
             // Debug: log the year range
-            console.log('Year range for color mapping:', { minYear, maxYear, currentYear: 2026 });
             
             // Initialize trie with loaded data
             trie = new Trie();
@@ -791,13 +912,14 @@
             updateTree();
         }
 
-        function renderTree(node, parentElement, searchTerm = '', visibleNodes = null) {
+        function renderTree(node, parentElement, searchTerm = '', visibleNodes = null, forceVisible = false) {
             // If searching and visibleNodes is set, only render if this node is visible
             // Root node (when parentElement is treeRoot) is always visible
+            // forceVisible: if true, render this node even if not in visibleNodes (for children of manually expanded nodes)
             const isRoot = parentElement.id === 'treeRoot';
-            if (visibleNodes && visibleNodes.size > 0 && !isRoot) {
+            if (visibleNodes && visibleNodes.size > 0 && !isRoot && !forceVisible) {
                 if (!visibleNodes.has(node.name)) {
-                    return; // Don't render this node if it's not visible
+                    return false; // Don't render this node if it's not visible
                 }
             }
             
@@ -811,7 +933,10 @@
             const hasChildren = node.children && node.children.length > 0;
             const isExpanded = expandedNodes.has(node.name);
             const isMatched = matchedNodes.has(node.name);
+            
             const isHighlighted = searchTerm && node.name.toLowerCase().includes(searchTerm.toLowerCase());
+            
+            // Removed verbose logging
 
             // Apply year-based color (preserved even when matched/highlighted)
             if (node.year !== undefined) {
@@ -835,9 +960,13 @@
                 toggle.classList.add('no-children');
                 toggle.textContent = '•';
             } else {
-                toggle.textContent = isExpanded ? '▼' : '▶';
-                if (!isExpanded) {
+                // Double-check expansion state to ensure button matches
+                const actualExpanded = expandedNodes.has(node.name);
+                toggle.textContent = actualExpanded ? '▼' : '▶';
+                if (!actualExpanded) {
                     toggle.classList.add('collapsed');
+                } else {
+                    toggle.classList.remove('collapsed');
                 }
                 toggle.onclick = (e) => {
                     e.stopPropagation();
@@ -917,36 +1046,90 @@
             if (hasChildren) {
                 const childrenUl = document.createElement('ul');
                 childrenUl.className = 'tree-children';
-                if (!isExpanded) {
+                
+                // If searching, show children based on visibility
+                // BUT: if this node is manually expanded, show ALL children regardless of filter
+                // This allows users to expand nodes to see all children even when searching
+                let childrenToShow;
+                if (searchTerm.trim() && visibleNodes && visibleNodes.size > 0 && !isExpanded) {
+                    // Not expanded: only show children that match the search filter
+                    childrenToShow = node.children.filter(child => visibleNodes.has(child.name));
+                } else if (isExpanded) {
+                    // Manually expanded: show ALL children regardless of search filter
+                    childrenToShow = node.children;
+                } else {
+                    // No search: show all children
+                    childrenToShow = node.children;
+                }
+                
+                // Set visibility: if expanded OR if there are visible children to show (during search)
+                const shouldShowChildren = isExpanded || (searchTerm.trim() && childrenToShow.length > 0);
+                if (shouldShowChildren) {
+                    childrenUl.classList.remove('hidden');
+                } else {
                     childrenUl.classList.add('hidden');
                 }
 
-                // If searching, only show children that are matched or are ancestors of matched nodes
-                // If not searching, show all children
-                const childrenToShow = visibleNodes && visibleNodes.size > 0
-                    ? node.children.filter(child => visibleNodes.has(child.name))
-                    : node.children;
-
+                // Removed verbose logging
+                
+                // If this node is manually expanded, render all children even if they don't match the search filter
+                const forceChildrenVisible = isExpanded;
                 childrenToShow.forEach(child => {
-                    renderTree(child, childrenUl, searchTerm, visibleNodes);
+                    renderTree(child, childrenUl, searchTerm, visibleNodes, forceChildrenVisible);
                 });
 
                 li.appendChild(childrenUl);
             }
 
             parentElement.appendChild(li);
+            return true; // Indicate that the node was rendered
         }
 
         function toggleNode(nodeName) {
-            if (expandedNodes.has(nodeName)) {
+            // Get current search term from the search box to maintain search filtering
+            const searchBox = document.getElementById('searchBox');
+            const currentSearchTerm = searchBox ? searchBox.value : '';
+            
+            // During search, check if this node is visible (matched or ancestor of match)
+            if (currentSearchTerm.trim()) {
+                // Recalculate visibleNodes to check if this node is visible
+                const tempVisibleNodes = new Set();
+                const matches = trie.searchSubstring(currentSearchTerm);
+                matches.forEach(node => {
+                    markAncestorsVisible(node, sampleHierarchy, tempVisibleNodes);
+                });
+                if (sampleHierarchy) {
+                    tempVisibleNodes.add(sampleHierarchy.name);
+                }
+                
+                // Only allow expansion/collapse if node is visible (matched or in path)
+                if (!tempVisibleNodes.has(nodeName)) {
+                    return; // Don't allow toggle of nodes not visible during search
+                }
+            }
+            
+            // Toggle the expansion state
+            const wasExpanded = expandedNodes.has(nodeName);
+            if (wasExpanded) {
                 expandedNodes.delete(nodeName);
+                // If searching, also remove from manually expanded during search
+                if (currentSearchTerm.trim()) {
+                    manuallyExpandedDuringSearch.delete(nodeName);
+                }
             } else {
                 expandedNodes.add(nodeName);
+                // If searching, mark as manually expanded during search
+                if (currentSearchTerm.trim()) {
+                    manuallyExpandedDuringSearch.add(nodeName);
+                }
             }
-            updateTree();
+            
+            // Pass the toggled node name and flag to indicate this is a manual toggle
+            // This ensures the toggle state is preserved even if there are visibility edge cases
+            updateTree(currentSearchTerm, true, nodeName);
         }
 
-        function updateTree(searchTerm = '') {
+        function updateTree(searchTerm = '', isManualToggle = false, toggledNodeName = null) {
             if (!sampleHierarchy || !trie) {
                 return; // Data not loaded yet
             }
@@ -955,15 +1138,24 @@
             const noResults = document.getElementById('noResults');
             treeRoot.innerHTML = '';
 
-            // If search is cleared, restore previous expansion state
-            if (!searchTerm.trim() && expandedBeforeSearch.size > 0) {
-                expandedNodes = new Set(expandedBeforeSearch);
+            // Check if we're transitioning from search to no search
+            const wasSearching = previousSearchTerm.trim().length > 0;
+            const isNowSearching = searchTerm.trim().length > 0;
+            
+            // If search is cleared (transitioning from search to no search), collapse all nodes
+            if (!isNowSearching && wasSearching) {
+                expandedNodes.clear();
                 expandedBeforeSearch.clear();
+                manuallyExpandedDuringSearch.clear();
             }
             // If starting a new search, save current expansion state
-            else if (searchTerm.trim() && expandedBeforeSearch.size === 0) {
+            else if (isNowSearching && !wasSearching && expandedBeforeSearch.size === 0) {
                 expandedBeforeSearch = new Set(expandedNodes);
+                manuallyExpandedDuringSearch.clear(); // Clear any previous manual expansions
             }
+            
+            // Update previous search term
+            previousSearchTerm = searchTerm;
 
             matchedNodes.clear();
 
@@ -973,18 +1165,94 @@
             if (searchTerm.trim()) {
                 // Find matching nodes using trie (substring search to match both node names and people names)
                 const matches = trie.searchSubstring(searchTerm);
+                
                 matches.forEach(node => {
                     matchedNodes.add(node.name);
-                    // Mark this node and all its ancestors as visible and expand them
+                    // Mark this node and all its ancestors as visible
                     markAncestorsVisible(node, sampleHierarchy, visibleNodes);
-                    // Also expand all ancestors to show the path
-                    expandAncestors(node, sampleHierarchy);
                 });
                 
                 // Always include root in visible nodes
                 if (sampleHierarchy) {
                     visibleNodes.add(sampleHierarchy.name);
                 }
+                
+                // Preserve current expansion state of visible nodes
+                // IMPORTANT: When called from manual toggle, preserve all current expandedNodes that are visible
+                // Only remove nodes that are no longer visible
+                const expandedToKeep = new Set();
+                expandedNodes.forEach(nodeName => {
+                    // Keep expansion state if node is visible
+                    if (visibleNodes.has(nodeName)) {
+                        expandedToKeep.add(nodeName);
+                    }
+                });
+                
+                // If this is a manual toggle and the toggled node is visible, ensure it's in the set
+                // This is critical: when expanding a node, toggleNode adds it to expandedNodes,
+                // but we need to ensure it's preserved in expandedToKeep even if there are any edge cases
+                // IMPORTANT: Only preserve if the node is actually in expandedNodes (i.e., we're expanding, not collapsing)
+                if (isManualToggle && toggledNodeName && visibleNodes.has(toggledNodeName) && expandedNodes.has(toggledNodeName)) {
+                    // Node is visible and was expanded - ensure it's in the set (it should already be if toggleNode added it)
+                    expandedToKeep.add(toggledNodeName);
+                } else if (isManualToggle && toggledNodeName && !expandedNodes.has(toggledNodeName)) {
+                    // Node was collapsed - ensure it's NOT in the set
+                    expandedToKeep.delete(toggledNodeName);
+                }
+                
+                // Set expandedNodes to preserved visible nodes (manually expanded + visible)
+                expandedNodes = expandedToKeep;
+                
+                // Track which nodes have matched children - only expand parents that have matches
+                const nodesWithMatchedChildren = new Set();
+                matches.forEach(matchedNode => {
+                    // Find the parent of this matched node
+                    const findParent = (currentNode, targetNode, parentNode = null) => {
+                        if (currentNode === targetNode) {
+                            if (parentNode) {
+                                nodesWithMatchedChildren.add(parentNode.name);
+                            }
+                            return true;
+                        }
+                        if (currentNode.children) {
+                            for (let child of currentNode.children) {
+                                if (findParent(child, targetNode, currentNode)) {
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    };
+                    findParent(sampleHierarchy, matchedNode);
+                });
+                
+                // Reevaluate expanded nodes on every search change:
+                // 1. Keep manually expanded nodes (from before search or manually toggled during search)
+                // 2. Add nodes that currently have matched children (auto-expand for visibility)
+                // 3. Remove nodes that were auto-expanded but no longer have matches
+                const finalExpandedNodes = new Set();
+                
+                // Keep manually expanded nodes from before search started (if still visible)
+                expandedBeforeSearch.forEach(nodeName => {
+                    if (visibleNodes.has(nodeName)) {
+                        finalExpandedNodes.add(nodeName);
+                    }
+                });
+                
+                // Keep nodes that were manually expanded during search (user clicked them)
+                manuallyExpandedDuringSearch.forEach(nodeName => {
+                    if (visibleNodes.has(nodeName)) {
+                        finalExpandedNodes.add(nodeName);
+                    }
+                });
+                
+                // Add nodes that currently have matched children (auto-expand so matches are visible)
+                // These will be collapsed automatically if they no longer have matches on next search change
+                nodesWithMatchedChildren.forEach(nodeName => {
+                    finalExpandedNodes.add(nodeName);
+                });
+                
+                expandedNodes = finalExpandedNodes;
 
                 if (matches.length === 0) {
                     treeRoot.style.display = 'none';
@@ -996,11 +1264,11 @@
             } else {
                 // No search - all nodes are visible (empty set means show all)
                 visibleNodes.clear();
-                // Don't clear expandedNodes - let user control expansion
+                // expandedNodes was already cleared above when search is empty
+                // User can now manually expand nodes
                 treeRoot.style.display = 'block';
                 noResults.style.display = 'none';
             }
-
             renderTree(sampleHierarchy, treeRoot, searchTerm, visibleNodes);
             updateStats();
         }
@@ -1009,7 +1277,9 @@
         function markAncestorsVisible(targetNode, currentNode, visibleNodes, path = []) {
             if (currentNode === targetNode) {
                 // Mark this node and all nodes in the path as visible
-                path.forEach(node => visibleNodes.add(node.name));
+                path.forEach(node => {
+                    visibleNodes.add(node.name);
+                });
                 visibleNodes.add(targetNode.name);
                 return true;
             }
@@ -1082,7 +1352,11 @@
             
             function collectTags(n) {
                 if (n.tags && Array.isArray(n.tags)) {
-                    n.tags.forEach(tag => tagsSet.add(tag));
+                    n.tags.forEach(tag => {
+                        // Handle both string tags (legacy) and object tags with name and explanation
+                        const tagName = typeof tag === 'string' ? tag : tag.name;
+                        tagsSet.add(tagName);
+                    });
                 }
                 if (n.children) {
                     n.children.forEach(child => collectTags(child));
@@ -1093,6 +1367,23 @@
             return tagsSet.size;
         }
 
+        // Count all papers across all nodes
+        function countPapers(node) {
+            let paperCount = 0;
+            
+            function collectPapers(n) {
+                if (n.papers && Array.isArray(n.papers)) {
+                    paperCount += n.papers.length;
+                }
+                if (n.children) {
+                    n.children.forEach(child => collectPapers(child));
+                }
+            }
+            
+            collectPapers(node);
+            return paperCount;
+        }
+
         function updateStats() {
             if (!sampleHierarchy) {
                 return; // Data not loaded yet
@@ -1100,10 +1391,12 @@
             const totalConcepts = countConcepts(sampleHierarchy);
             const totalPeople = countPeople(sampleHierarchy);
             const totalTags = countTags(sampleHierarchy);
+            const totalPapers = countPapers(sampleHierarchy);
             const matchCount = matchedNodes.size;
             document.getElementById('conceptCount').textContent = `Total concepts: ${totalConcepts}`;
             document.getElementById('peopleCount').textContent = `Total people: ${totalPeople}`;
             document.getElementById('tagCount').textContent = `Total tags: ${totalTags}`;
+            document.getElementById('paperCount').textContent = `Total papers: ${totalPapers}`;
             document.getElementById('matchCount').textContent = `Matches: ${matchCount}`;
         }
 
@@ -1143,13 +1436,25 @@
             const title = document.getElementById('contextModalTitle');
             const year = document.getElementById('contextModalYear');
             const summary = document.getElementById('contextModalSummary');
+            const tagsContainer = document.getElementById('contextModalTags');
             const peopleContainer = document.getElementById('contextModalPeople');
+            const papersContainer = document.getElementById('contextModalPapers');
 
             title.textContent = nodeToUse.name;
             if (nodeToUse.year !== undefined) {
                 year.textContent = `Year: ${nodeToUse.year}`;
+                // Apply year-based color to the year text
+                const yearColor = yearToColor(nodeToUse.year);
+                year.style.color = yearColor;
+                year.style.textShadow = `
+                    0 0 5px ${yearColor},
+                    0 0 10px ${yearColor}80,
+                    0 0 15px ${yearColor}60
+                `;
             } else {
                 year.textContent = '';
+                year.style.color = '';
+                year.style.textShadow = '';
             }
 
             // Check for summary property - it should be directly on the node
@@ -1159,6 +1464,44 @@
             } else {
                 summary.textContent = 'No summary available.';
                 summary.style.display = 'block';
+            }
+
+            // Display tags
+            tagsContainer.innerHTML = '';
+            if (nodeToUse.tags && Array.isArray(nodeToUse.tags) && nodeToUse.tags.length > 0) {
+                const tagsLabel = document.createElement('div');
+                tagsLabel.className = 'context-modal-tags-label';
+                tagsLabel.textContent = 'Tags:';
+                tagsContainer.appendChild(tagsLabel);
+
+                const tagsList = document.createElement('div');
+                tagsList.className = 'context-modal-tags-list';
+
+                nodeToUse.tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'context-modal-tag';
+                    
+                    // Handle both string tags (legacy) and object tags with name and explanation
+                    const tagName = typeof tag === 'string' ? tag : tag.name;
+                    const tagExplanation = typeof tag === 'object' && tag.explanation ? tag.explanation : null;
+                    
+                    tagElement.textContent = tagName;
+                    
+                    // Add tooltip if explanation exists
+                    if (tagExplanation) {
+                        const tooltip = document.createElement('span');
+                        tooltip.className = 'context-modal-tag-tooltip';
+                        tooltip.textContent = tagExplanation;
+                        tagElement.appendChild(tooltip);
+                    }
+                    
+                    tagsList.appendChild(tagElement);
+                });
+
+                tagsContainer.appendChild(tagsList);
+                tagsContainer.style.display = 'block';
+            } else {
+                tagsContainer.style.display = 'none';
             }
 
             // Display people
@@ -1186,6 +1529,33 @@
                 peopleContainer.style.display = 'block';
             } else {
                 peopleContainer.style.display = 'none';
+            }
+
+            // Display papers
+            papersContainer.innerHTML = '';
+            if (nodeToUse.papers && Array.isArray(nodeToUse.papers) && nodeToUse.papers.length > 0) {
+                const papersLabel = document.createElement('div');
+                papersLabel.className = 'context-modal-papers-label';
+                papersLabel.textContent = 'Key Papers:';
+                papersContainer.appendChild(papersLabel);
+
+                const papersList = document.createElement('div');
+                papersList.className = 'context-modal-papers-list';
+
+                nodeToUse.papers.forEach(paper => {
+                    const paperLink = document.createElement('a');
+                    paperLink.className = 'context-modal-paper';
+                    paperLink.textContent = paper.title;
+                    paperLink.href = paper.link;
+                    paperLink.target = '_blank';
+                    paperLink.rel = 'noopener noreferrer';
+                    papersList.appendChild(paperLink);
+                });
+
+                papersContainer.appendChild(papersList);
+                papersContainer.style.display = 'block';
+            } else {
+                papersContainer.style.display = 'none';
             }
 
             modal.classList.add('active');

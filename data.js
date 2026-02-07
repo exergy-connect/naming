@@ -11,8 +11,8 @@ const physicsData = {
           "name": "Newtonian Mechanics",
           "year": 1687,
           "children": [
-            {"name": "Newton's Laws of Motion", "year": 1687, "summary": "Three fundamental laws describing the relationship between motion and forces.", "people": ["Isaac Newton"], "tags": ["force"]},
-            {"name": "Universal Gravitation", "year": 1687, "summary": "Every particle attracts every other particle with a force proportional to their masses.", "people": ["Isaac Newton"], "tags": ["force"]},
+            {"name": "Newton's Laws of Motion", "year": 1687, "summary": "Three fundamental laws describing the relationship between motion and forces.", "people": ["Isaac Newton"], "tags": [{"name": "force", "explanation": "These laws describe how forces cause changes in motion and the relationship between force, mass, and acceleration."}], "papers": [{"title": "Philosophiæ Naturalis Principia Mathematica", "link": "https://en.wikipedia.org/wiki/Philosophi%C3%A6_Naturalis_Principia_Mathematica"}]},
+            {"name": "Universal Gravitation", "year": 1687, "summary": "Every particle attracts every other particle with a force proportional to their masses.", "people": ["Isaac Newton"], "tags": [{"name": "force", "explanation": "Describes the gravitational force that acts between all masses in the universe."}]},
             {"name": "Conservation of Momentum", "year": 1644, "summary": "Total momentum of a closed system remains constant in the absence of external forces.", "people": ["René Descartes"]},
             {"name": "Conservation of Energy", "year": 1847, "summary": "Energy cannot be created or destroyed, only transformed from one form to another.", "people": ["Julius Robert von Mayer", "James Prescott Joule"]}
           ]
@@ -47,8 +47,8 @@ const physicsData = {
           "name": "Quantum Mechanics",
           "year": 1925,
           "children": [
-            {"name": "Schrödinger Equation", "year": 1926, "summary": "Fundamental equation describing how quantum states evolve over time.", "people": ["Erwin Schrödinger"]},
-            {"name": "Heisenberg Uncertainty Principle", "year": 1927, "summary": "Fundamental limit to precision of simultaneous measurement of complementary properties.", "people": ["Werner Heisenberg"]},
+            {"name": "Schrödinger Equation", "year": 1926, "summary": "Fundamental equation describing how quantum states evolve over time.", "people": ["Erwin Schrödinger"], "tags": [{"name": "time", "explanation": "The equation describes the time evolution of quantum states, showing how wave functions change over time."}], "papers": [{"title": "An Undulatory Theory of the Mechanics of Atoms and Molecules", "link": "https://journals.aps.org/pr/abstract/10.1103/PhysRev.28.1049"}]},
+            {"name": "Heisenberg Uncertainty Principle", "year": 1927, "summary": "Fundamental limit to precision of simultaneous measurement of complementary properties.", "people": ["Werner Heisenberg"], "papers": [{"title": "Über den anschaulichen Inhalt der quantentheoretischen Kinematik und Mechanik", "link": "https://en.wikipedia.org/wiki/Uncertainty_principle"}]},
             {"name": "Wave-Particle Duality", "year": 1924, "summary": "Concept that all matter exhibits both wave and particle properties.", "people": ["Louis de Broglie"]},
             {"name": "Quantum Entanglement", "year": 1935, "summary": "Phenomenon where particles become correlated and share quantum states.", "people": ["Albert Einstein", "Boris Podolsky", "Nathan Rosen"]}
           ]
@@ -57,10 +57,10 @@ const physicsData = {
           "name": "Quantum Field Theory",
           "year": 1927,
           "children": [
-            {"name": "Standard Model", "year": 1975, "summary": "Theory describing three of the four fundamental forces and all known elementary particles.", "people": ["Sheldon Glashow", "Abdus Salam", "Steven Weinberg"], "tags": ["force"]},
-            {"name": "Quantum Electrodynamics", "year": 1948, "summary": "Quantum field theory of electromagnetism describing interactions of light and matter.", "people": ["Richard Feynman", "Julian Schwinger", "Sin-Itiro Tomonaga"], "tags": ["force"]},
-            {"name": "Quantum Chromodynamics", "year": 1973, "summary": "Theory of the strong nuclear force that binds quarks and gluons.", "people": ["Murray Gell-Mann", "Harald Fritzsch", "Heinrich Leutwyler"], "tags": ["force"]},
-            {"name": "Electroweak Theory", "year": 1967, "summary": "Unified description of electromagnetic and weak nuclear forces.", "people": ["Sheldon Glashow", "Abdus Salam", "Steven Weinberg"], "tags": ["force"]}
+            {"name": "Standard Model", "year": 1975, "summary": "Theory describing three of the four fundamental forces and all known elementary particles.", "people": ["Sheldon Glashow", "Abdus Salam", "Steven Weinberg"], "tags": [{"name": "force", "explanation": "The Standard Model describes three of the four fundamental forces: electromagnetic, weak nuclear, and strong nuclear forces."}]},
+            {"name": "Quantum Electrodynamics", "year": 1948, "summary": "Quantum field theory of electromagnetism describing interactions of light and matter.", "people": ["Richard Feynman", "Julian Schwinger", "Sin-Itiro Tomonaga"], "tags": [{"name": "force", "explanation": "Describes the electromagnetic force at the quantum level, governing interactions between charged particles and photons."}]},
+            {"name": "Quantum Chromodynamics", "year": 1973, "summary": "Theory of the strong nuclear force that binds quarks and gluons.", "people": ["Murray Gell-Mann", "Harald Fritzsch", "Heinrich Leutwyler"], "tags": [{"name": "force", "explanation": "Describes the strong nuclear force that binds quarks together to form protons, neutrons, and other hadrons."}]},
+            {"name": "Electroweak Theory", "year": 1967, "summary": "Unified description of electromagnetic and weak nuclear forces.", "people": ["Sheldon Glashow", "Abdus Salam", "Steven Weinberg"], "tags": [{"name": "force", "explanation": "Unifies the electromagnetic and weak nuclear forces into a single theoretical framework."}]}
           ]
         },
         {
@@ -83,20 +83,20 @@ const physicsData = {
           "name": "Special Relativity",
           "year": 1905,
           "children": [
-            {"name": "Lorentz Transformations", "year": 1904, "summary": "Mathematical transformations that relate space and time coordinates between different inertial reference frames.", "people": ["Hendrik Lorentz"]},
-            {"name": "Time Dilation", "year": 1905, "summary": "Phenomenon where time passes slower for objects moving relative to an observer.", "people": ["Albert Einstein"]},
+            {"name": "Lorentz Transformations", "year": 1904, "summary": "Mathematical transformations that relate space and time coordinates between different inertial reference frames.", "people": ["Hendrik Lorentz"], "tags": [{"name": "time", "explanation": "These transformations show how time coordinates change when moving between different reference frames in special relativity."}]},
+            {"name": "Time Dilation", "year": 1905, "summary": "Phenomenon where time passes slower for objects moving relative to an observer.", "people": ["Albert Einstein"], "tags": [{"name": "time", "explanation": "Directly describes how time itself is affected by relative motion, with time passing slower for moving objects."}], "papers": [{"title": "On the Electrodynamics of Moving Bodies", "link": "https://en.wikipedia.org/wiki/Annus_Mirabilis_papers"}]},
             {"name": "Length Contraction", "year": 1905, "summary": "Phenomenon where the length of an object appears shorter when moving relative to an observer.", "people": ["Albert Einstein"]},
-            {"name": "Mass-Energy Equivalence", "year": 1905, "summary": "Principle that mass and energy are equivalent and can be converted into each other, expressed as E=mc².", "people": ["Albert Einstein"]}
+            {"name": "Mass-Energy Equivalence", "year": 1905, "summary": "Principle that mass and energy are equivalent and can be converted into each other, expressed as E=mc².", "people": ["Albert Einstein"], "papers": [{"title": "Does the Inertia of a Body Depend Upon Its Energy Content?", "link": "https://en.wikipedia.org/wiki/Annus_Mirabilis_papers"}]}
           ]
         },
         {
           "name": "General Relativity",
           "year": 1915,
           "children": [
-            {"name": "Einstein Field Equations", "year": 1915, "summary": "Set of equations describing how matter and energy curve spacetime.", "people": ["Albert Einstein"], "tags": ["force"]},
+            {"name": "Einstein Field Equations", "year": 1915, "summary": "Set of equations describing how matter and energy curve spacetime.", "people": ["Albert Einstein"], "tags": [{"name": "force", "explanation": "These equations describe gravity as a force resulting from the curvature of spacetime caused by matter and energy."}], "papers": [{"title": "The Field Equations of Gravitation", "link": "https://en.wikipedia.org/wiki/Einstein_field_equations"}]},
             {"name": "Black Holes", "year": 1916, "summary": "Regions of spacetime where gravity is so strong that nothing can escape.", "people": ["Karl Schwarzschild", "Albert Einstein"]},
             {"name": "Gravitational Waves", "year": 1916, "summary": "Ripples in spacetime caused by accelerating massive objects.", "people": ["Albert Einstein"]},
-            {"name": "Cosmological Models", "year": 1917, "summary": "Theoretical frameworks describing the large-scale structure and evolution of the universe.", "people": ["Albert Einstein", "Willem de Sitter", "Alexander Friedmann"]}
+            {"name": "Cosmological Models", "year": 1917, "summary": "Theoretical frameworks describing the large-scale structure and evolution of the universe.", "people": ["Albert Einstein", "Willem de Sitter", "Alexander Friedmann"], "tags": [{"name": "time", "explanation": "These models describe how the universe evolves over cosmological time scales, from the Big Bang to the present and future."}]}
           ]
         },
         {
@@ -105,8 +105,8 @@ const physicsData = {
           "children": [
             {"name": "Relativistic Kinematics", "year": 1905, "summary": "Study of motion in the absence of forces, accounting for relativistic effects.", "people": ["Albert Einstein"]},
             {"name": "Relativistic Dynamics", "year": 1905, "summary": "Study of motion under the influence of forces, incorporating relativistic corrections.", "people": ["Albert Einstein"]},
-            {"name": "Minkowski Spacetime", "year": 1908, "summary": "Four-dimensional mathematical model combining three-dimensional space with time into a single continuum.", "people": ["Hermann Minkowski"]},
-            {"name": "Twin Paradox", "year": 1911, "summary": "Thought experiment demonstrating time dilation where a traveling twin ages slower than a stationary twin.", "people": ["Albert Einstein", "Paul Langevin"]}
+            {"name": "Minkowski Spacetime", "year": 1908, "summary": "Four-dimensional mathematical model combining three-dimensional space with time into a single continuum.", "people": ["Hermann Minkowski"], "tags": [{"name": "time", "explanation": "Unifies space and time into a four-dimensional spacetime continuum, where time is treated as a dimension on equal footing with spatial dimensions."}]},
+            {"name": "Twin Paradox", "year": 1911, "summary": "Thought experiment demonstrating time dilation where a traveling twin ages slower than a stationary twin.", "people": ["Albert Einstein", "Paul Langevin"], "tags": [{"name": "time", "explanation": "Demonstrates the real-world consequences of time dilation, showing how time passes differently for observers in relative motion."}]}
           ]
         }
       ]
@@ -119,8 +119,8 @@ const physicsData = {
           "name": "Classical Thermodynamics",
           "year": 1850,
           "children": [
-            {"name": "Laws of Thermodynamics", "year": 1850, "summary": "Four fundamental laws governing energy, entropy, and temperature in thermodynamic systems.", "people": ["Rudolf Clausius", "William Thomson"]},
-            {"name": "Entropy", "year": 1865, "summary": "Measure of disorder or randomness in a system, central to the second law of thermodynamics.", "people": ["Rudolf Clausius"]},
+            {"name": "Laws of Thermodynamics", "year": 1850, "summary": "Four fundamental laws governing energy, entropy, and temperature in thermodynamic systems.", "people": ["Rudolf Clausius", "William Thomson"], "tags": [{"name": "time", "explanation": "The second law establishes the arrow of time by stating that entropy increases over time, giving time its directionality."}]},
+            {"name": "Entropy", "year": 1865, "summary": "Measure of disorder or randomness in a system, central to the second law of thermodynamics.", "people": ["Rudolf Clausius"], "tags": [{"name": "time", "explanation": "Entropy's increase over time defines the arrow of time, explaining why processes are irreversible and why we remember the past but not the future."}]},
             {"name": "Heat Engines", "year": 1824, "summary": "Devices that convert thermal energy into mechanical work through cyclic processes.", "people": ["Sadi Carnot"]},
             {"name": "Carnot Cycle", "year": 1824, "summary": "Theoretical reversible thermodynamic cycle that defines the maximum possible efficiency for a heat engine.", "people": ["Sadi Carnot"]}
           ]
@@ -155,9 +155,9 @@ const physicsData = {
           "name": "Classical Electrodynamics",
           "year": 1865,
           "children": [
-            {"name": "Maxwell's Equations", "year": 1865, "summary": "Four fundamental equations describing electricity, magnetism, and their relationship.", "people": ["James Clerk Maxwell"]},
+            {"name": "Maxwell's Equations", "year": 1865, "summary": "Four fundamental equations describing electricity, magnetism, and their relationship.", "people": ["James Clerk Maxwell"], "papers": [{"title": "A Dynamical Theory of the Electromagnetic Field", "link": "https://en.wikipedia.org/wiki/A_Dynamical_Theory_of_the_Electromagnetic_Field"}]},
             {"name": "Electromagnetic Waves", "year": 1865, "summary": "Oscillating electric and magnetic fields that propagate through space.", "people": ["James Clerk Maxwell", "Heinrich Hertz"]},
-            {"name": "Lorentz Force", "year": 1895, "summary": "Force experienced by a charged particle moving through electric and magnetic fields.", "people": ["Hendrik Lorentz"], "tags": ["force"]},
+            {"name": "Lorentz Force", "year": 1895, "summary": "Force experienced by a charged particle moving through electric and magnetic fields.", "people": ["Hendrik Lorentz"], "tags": [{"name": "force", "explanation": "Describes the electromagnetic force acting on charged particles moving through electric and magnetic fields."}]},
             {"name": "Gauss's Law", "year": 1835, "summary": "Relationship between electric flux through a closed surface and enclosed charge.", "people": ["Carl Friedrich Gauss"]}
           ]
         },
@@ -193,7 +193,7 @@ const physicsData = {
           "children": [
             {"name": "Quarks", "year": 1964, "summary": "Elementary particles that combine to form composite particles like protons and neutrons.", "people": ["Murray Gell-Mann", "George Zweig"]},
             {"name": "Leptons", "year": 1947, "summary": "Class of elementary particles that do not participate in strong interactions, including electrons and neutrinos.", "people": ["Cecil Powell"]},
-            {"name": "Gauge Bosons", "year": 1983, "people": ["Carlo Rubbia", "Simon van der Meer"], "tags": ["force"]},
+            {"name": "Gauge Bosons", "year": 1983, "people": ["Carlo Rubbia", "Simon van der Meer"], "tags": [{"name": "force", "explanation": "These particles are the force carriers that mediate the fundamental forces: photons (electromagnetic), W and Z bosons (weak), and gluons (strong)."}]},
             {"name": "Higgs Boson", "year": 2012, "summary": "Elementary particle that gives mass to other particles through the Higgs field.", "people": ["Peter Higgs", "François Englert"]}
           ]
         },
