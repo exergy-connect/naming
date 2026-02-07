@@ -67,10 +67,10 @@ const physicsData = {
           "name": "Quantum Information",
           "year": 1980,
           "children": [
-            {"name": "Quantum Computing", "year": 1982, "people": ["Richard Feynman", "Paul Benioff", "Yuri Manin"]},
-            {"name": "Quantum Cryptography", "year": 1984, "people": ["Charles Bennett", "Gilles Brassard"]},
-            {"name": "Bell's Theorem", "year": 1964, "people": ["John Stewart Bell"]},
-            {"name": "Quantum Teleportation", "year": 1993, "people": ["Charles Bennett", "Gilles Brassard", "Claude Crépeau", "Richard Jozsa", "Asher Peres", "William Wootters"]}
+            {"name": "Quantum Computing", "year": 1982, "summary": "Computing paradigm that uses quantum mechanical phenomena like superposition and entanglement to perform computations.", "people": ["Richard Feynman", "Paul Benioff", "Yuri Manin"]},
+            {"name": "Quantum Cryptography", "year": 1984, "summary": "Cryptographic protocols that use quantum mechanical properties to secure communication.", "people": ["Charles Bennett", "Gilles Brassard"]},
+            {"name": "Bell's Theorem", "year": 1964, "summary": "Theorem proving that no local hidden variable theory can reproduce all predictions of quantum mechanics.", "people": ["John Stewart Bell"]},
+            {"name": "Quantum Teleportation", "year": 1993, "summary": "Process of transferring quantum information from one location to another using entanglement.", "people": ["Charles Bennett", "Gilles Brassard", "Claude Crépeau", "Richard Jozsa", "Asher Peres", "William Wootters"]}
           ]
         }
       ]
@@ -83,10 +83,10 @@ const physicsData = {
           "name": "Special Relativity",
           "year": 1905,
           "children": [
-            {"name": "Lorentz Transformations", "year": 1904, "people": ["Hendrik Lorentz"]},
-            {"name": "Time Dilation", "year": 1905, "people": ["Albert Einstein"]},
-            {"name": "Length Contraction", "year": 1905, "people": ["Albert Einstein"]},
-            {"name": "Mass-Energy Equivalence", "year": 1905, "people": ["Albert Einstein"]}
+            {"name": "Lorentz Transformations", "year": 1904, "summary": "Mathematical transformations that relate space and time coordinates between different inertial reference frames.", "people": ["Hendrik Lorentz"]},
+            {"name": "Time Dilation", "year": 1905, "summary": "Phenomenon where time passes slower for objects moving relative to an observer.", "people": ["Albert Einstein"]},
+            {"name": "Length Contraction", "year": 1905, "summary": "Phenomenon where the length of an object appears shorter when moving relative to an observer.", "people": ["Albert Einstein"]},
+            {"name": "Mass-Energy Equivalence", "year": 1905, "summary": "Principle that mass and energy are equivalent and can be converted into each other, expressed as E=mc².", "people": ["Albert Einstein"]}
           ]
         },
         {
@@ -103,10 +103,10 @@ const physicsData = {
           "name": "Relativistic Mechanics",
           "year": 1905,
           "children": [
-            {"name": "Relativistic Kinematics", "year": 1905, "people": ["Albert Einstein"]},
-            {"name": "Relativistic Dynamics", "year": 1905, "people": ["Albert Einstein"]},
-            {"name": "Minkowski Spacetime", "year": 1908, "people": ["Hermann Minkowski"]},
-            {"name": "Twin Paradox", "year": 1911, "people": ["Albert Einstein", "Paul Langevin"]}
+            {"name": "Relativistic Kinematics", "year": 1905, "summary": "Study of motion in the absence of forces, accounting for relativistic effects.", "people": ["Albert Einstein"]},
+            {"name": "Relativistic Dynamics", "year": 1905, "summary": "Study of motion under the influence of forces, incorporating relativistic corrections.", "people": ["Albert Einstein"]},
+            {"name": "Minkowski Spacetime", "year": 1908, "summary": "Four-dimensional mathematical model combining three-dimensional space with time into a single continuum.", "people": ["Hermann Minkowski"]},
+            {"name": "Twin Paradox", "year": 1911, "summary": "Thought experiment demonstrating time dilation where a traveling twin ages slower than a stationary twin.", "people": ["Albert Einstein", "Paul Langevin"]}
           ]
         }
       ]
@@ -119,30 +119,30 @@ const physicsData = {
           "name": "Classical Thermodynamics",
           "year": 1850,
           "children": [
-            {"name": "Laws of Thermodynamics", "year": 1850, "people": ["Rudolf Clausius", "William Thomson"]},
-            {"name": "Entropy", "year": 1865, "people": ["Rudolf Clausius"]},
-            {"name": "Heat Engines", "year": 1824, "people": ["Sadi Carnot"]},
-            {"name": "Carnot Cycle", "year": 1824, "people": ["Sadi Carnot"]}
+            {"name": "Laws of Thermodynamics", "year": 1850, "summary": "Four fundamental laws governing energy, entropy, and temperature in thermodynamic systems.", "people": ["Rudolf Clausius", "William Thomson"]},
+            {"name": "Entropy", "year": 1865, "summary": "Measure of disorder or randomness in a system, central to the second law of thermodynamics.", "people": ["Rudolf Clausius"]},
+            {"name": "Heat Engines", "year": 1824, "summary": "Devices that convert thermal energy into mechanical work through cyclic processes.", "people": ["Sadi Carnot"]},
+            {"name": "Carnot Cycle", "year": 1824, "summary": "Theoretical reversible thermodynamic cycle that defines the maximum possible efficiency for a heat engine.", "people": ["Sadi Carnot"]}
           ]
         },
         {
           "name": "Statistical Mechanics",
           "year": 1871,
           "children": [
-            {"name": "Boltzmann Distribution", "year": 1871, "people": ["Ludwig Boltzmann"]},
-            {"name": "Fermi-Dirac Statistics", "year": 1926, "people": ["Enrico Fermi", "Paul Dirac"]},
-            {"name": "Bose-Einstein Statistics", "year": 1924, "people": ["Satyendra Nath Bose", "Albert Einstein"]},
-            {"name": "Partition Function", "year": 1902, "people": ["Josiah Willard Gibbs"]}
+            {"name": "Boltzmann Distribution", "year": 1871, "summary": "Probability distribution describing the statistical behavior of particles in thermal equilibrium.", "people": ["Ludwig Boltzmann"]},
+            {"name": "Fermi-Dirac Statistics", "year": 1926, "summary": "Statistical distribution describing particles with half-integer spin that obey the Pauli exclusion principle.", "people": ["Enrico Fermi", "Paul Dirac"]},
+            {"name": "Bose-Einstein Statistics", "year": 1924, "summary": "Statistical distribution describing particles with integer spin that can occupy the same quantum state.", "people": ["Satyendra Nath Bose", "Albert Einstein"]},
+            {"name": "Partition Function", "year": 1902, "summary": "Mathematical function that encodes the statistical properties of a thermodynamic system in equilibrium.", "people": ["Josiah Willard Gibbs"]}
           ]
         },
         {
           "name": "Non-Equilibrium Thermodynamics",
           "year": 1931,
           "children": [
-            {"name": "Onsager reciprocal relations", "year": 1931, "people": ["Lars Onsager"]},
-            {"name": "Fluctuation-Dissipation Theorem", "year": 1951, "people": ["Herbert Callen", "Theodore Welton"]},
-            {"name": "Brownian Motion", "year": 1905, "people": ["Albert Einstein", "Marian Smoluchowski"]},
-            {"name": "Diffusion Processes", "year": 1905, "people": ["Albert Einstein", "Adolf Fick"]}
+            {"name": "Onsager reciprocal relations", "year": 1931, "summary": "Symmetry relations between transport coefficients in systems near thermodynamic equilibrium.", "people": ["Lars Onsager"]},
+            {"name": "Fluctuation-Dissipation Theorem", "year": 1951, "summary": "Theorem connecting the response of a system to external perturbations with its internal fluctuations.", "people": ["Herbert Callen", "Theodore Welton"]},
+            {"name": "Brownian Motion", "year": 1905, "summary": "Random motion of particles suspended in a fluid resulting from collisions with surrounding molecules.", "people": ["Albert Einstein", "Marian Smoluchowski"]},
+            {"name": "Diffusion Processes", "year": 1905, "summary": "Process by which particles spread from regions of high concentration to regions of low concentration.", "people": ["Albert Einstein", "Adolf Fick"]}
           ]
         }
       ]
@@ -165,20 +165,20 @@ const physicsData = {
           "name": "Optics",
           "year": 1801,
           "children": [
-            {"name": "Wave Optics", "year": 1801, "people": ["Thomas Young"]},
-            {"name": "Geometric Optics", "year": 1637, "people": ["René Descartes"]},
-            {"name": "Interference", "year": 1801, "people": ["Thomas Young"]},
-            {"name": "Diffraction", "year": 1665, "people": ["Francesco Maria Grimaldi", "Christiaan Huygens"]}
+            {"name": "Wave Optics", "year": 1801, "summary": "Branch of optics that treats light as a wave, explaining phenomena like interference and diffraction.", "people": ["Thomas Young"]},
+            {"name": "Geometric Optics", "year": 1637, "summary": "Branch of optics that treats light as rays, describing reflection and refraction using geometric principles.", "people": ["René Descartes"]},
+            {"name": "Interference", "year": 1801, "summary": "Phenomenon where two or more waves superpose to form a resultant wave of greater or lower amplitude.", "people": ["Thomas Young"]},
+            {"name": "Diffraction", "year": 1665, "summary": "Bending and spreading of waves around obstacles or through apertures, characteristic of wave behavior.", "people": ["Francesco Maria Grimaldi", "Christiaan Huygens"]}
           ]
         },
         {
           "name": "Plasma Physics",
           "year": 1928,
           "children": [
-            {"name": "Magnetohydrodynamics", "year": 1942, "people": ["Hannes Alfvén"]},
-            {"name": "Plasma Waves", "year": 1928, "people": ["Irving Langmuir", "Lewi Tonks"]},
-            {"name": "Fusion Theory", "year": 1950, "people": ["Lyman Spitzer"]},
-            {"name": "Solar Wind Models", "year": 1958, "people": ["Eugene Parker"]}
+            {"name": "Magnetohydrodynamics", "year": 1942, "summary": "Study of the dynamics of electrically conducting fluids in magnetic fields.", "people": ["Hannes Alfvén"]},
+            {"name": "Plasma Waves", "year": 1928, "summary": "Oscillations and waves that propagate through plasma, a state of matter with free charged particles.", "people": ["Irving Langmuir", "Lewi Tonks"]},
+            {"name": "Fusion Theory", "year": 1950, "summary": "Theoretical framework describing nuclear fusion, the process of combining light atomic nuclei to form heavier ones.", "people": ["Lyman Spitzer"]},
+            {"name": "Solar Wind Models", "year": 1958, "summary": "Theoretical models describing the continuous stream of charged particles emitted from the Sun's corona.", "people": ["Eugene Parker"]}
           ]
         }
       ]
@@ -191,8 +191,8 @@ const physicsData = {
           "name": "Elementary Particles",
           "year": 1932,
           "children": [
-            {"name": "Quarks", "year": 1964, "people": ["Murray Gell-Mann", "George Zweig"]},
-            {"name": "Leptons", "year": 1947, "people": ["Cecil Powell"]},
+            {"name": "Quarks", "year": 1964, "summary": "Elementary particles that combine to form composite particles like protons and neutrons.", "people": ["Murray Gell-Mann", "George Zweig"]},
+            {"name": "Leptons", "year": 1947, "summary": "Class of elementary particles that do not participate in strong interactions, including electrons and neutrinos.", "people": ["Cecil Powell"]},
             {"name": "Gauge Bosons", "year": 1983, "people": ["Carlo Rubbia", "Simon van der Meer"], "tags": ["force"]},
             {"name": "Higgs Boson", "year": 2012, "summary": "Elementary particle that gives mass to other particles through the Higgs field.", "people": ["Peter Higgs", "François Englert"]}
           ]
@@ -201,20 +201,20 @@ const physicsData = {
           "name": "Symmetries",
           "year": 1918,
           "children": [
-            {"name": "Gauge Symmetry", "year": 1918, "people": ["Hermann Weyl"]},
-            {"name": "CP Violation", "year": 1964, "people": ["James Cronin", "Val Fitch"]},
-            {"name": "Supersymmetry", "year": 1971, "people": ["Yuri Golfand", "Evgeny Likhtman"]},
-            {"name": "String Theory", "year": 1970, "people": ["Yoichiro Nambu", "Holger Bech Nielsen", "Leonard Susskind"]}
+            {"name": "Gauge Symmetry", "year": 1918, "summary": "Symmetry principle underlying the fundamental forces, describing invariance under local transformations.", "people": ["Hermann Weyl"]},
+            {"name": "CP Violation", "year": 1964, "summary": "Violation of the combined symmetry of charge conjugation and parity, explaining matter-antimatter asymmetry.", "people": ["James Cronin", "Val Fitch"]},
+            {"name": "Supersymmetry", "year": 1971, "summary": "Theoretical symmetry relating fermions and bosons, proposing a partner particle for each known particle.", "people": ["Yuri Golfand", "Evgeny Likhtman"]},
+            {"name": "String Theory", "year": 1970, "summary": "Theoretical framework proposing that fundamental particles are one-dimensional vibrating strings rather than point particles.", "people": ["Yoichiro Nambu", "Holger Bech Nielsen", "Leonard Susskind"]}
           ]
         },
         {
           "name": "Accelerator Physics",
           "year": 1930,
           "children": [
-            {"name": "Collider Experiments", "year": 1956, "people": ["Donald Kerst"]},
-            {"name": "Particle Detectors", "year": 1911, "people": ["Hans Geiger", "Ernest Rutherford"]},
-            {"name": "Beam Dynamics", "year": 1950, "people": ["Ernest Courant", "Milton Livingston", "Hartland Snyder"]},
-            {"name": "Synchrotron Radiation", "year": 1947, "people": ["Elder", "Gurewitsch", "Langmuir"]}
+            {"name": "Collider Experiments", "year": 1956, "summary": "Experiments using particle accelerators to collide particles at high energies to study fundamental physics.", "people": ["Donald Kerst"]},
+            {"name": "Particle Detectors", "year": 1911, "summary": "Instruments designed to detect and measure properties of subatomic particles and radiation.", "people": ["Hans Geiger", "Ernest Rutherford"]},
+            {"name": "Beam Dynamics", "year": 1950, "summary": "Study of the motion and control of charged particle beams in accelerators and storage rings.", "people": ["Ernest Courant", "Milton Livingston", "Hartland Snyder"]},
+            {"name": "Synchrotron Radiation", "year": 1947, "summary": "Electromagnetic radiation emitted when charged particles are accelerated in curved paths, typically in synchrotrons.", "people": ["Elder", "Gurewitsch", "Langmuir"]}
           ]
         }
       ]

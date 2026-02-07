@@ -54,6 +54,17 @@ To contribute:
 2. Each concept should include: `name`, `year`, and optionally `summary`
 3. Ensure proper hierarchical organization within the existing categories
 
+## 📚 Data Source
+
+The physics knowledge base, including concept summaries, historical dates, and key people associated with each theory, was generated using **Auto** (Cursor's AI agent router), powered by large language models. The content was created through AI-assisted research and synthesis of physics knowledge, with careful review to ensure accuracy of historical dates, theoretical descriptions, and attribution of key contributors.
+
+**LLM Model Information:**
+- **Agent Router**: Auto (Cursor AI)
+- **Primary Model**: GPT-4o (as of 2026-02-07)
+- **Generation Date**: February 2026
+
+The data structure, hierarchical organization, and summaries were all generated with AI assistance to create a comprehensive and navigable representation of physics knowledge.
+
 ## 📄 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
