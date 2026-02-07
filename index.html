@@ -798,6 +798,7 @@
         let maxYear = -Infinity;
         let expandedBeforeSearch = new Set(); // Track nodes expanded before search
         let manuallyExpandedDuringSearch = new Set(); // Track nodes manually expanded during search
+        let manuallyCollapsedDuringSearch = new Set(); // Track nodes manually collapsed during search
         let previousSearchTerm = ''; // Track previous search term to detect transitions
 
         // Find min and max years in the data (excluding root node)
@@ -1112,15 +1113,17 @@
             const wasExpanded = expandedNodes.has(nodeName);
             if (wasExpanded) {
                 expandedNodes.delete(nodeName);
-                // If searching, also remove from manually expanded during search
+                // If searching, track manual collapse and remove from manually expanded
                 if (currentSearchTerm.trim()) {
                     manuallyExpandedDuringSearch.delete(nodeName);
+                    manuallyCollapsedDuringSearch.add(nodeName);
                 }
             } else {
                 expandedNodes.add(nodeName);
-                // If searching, mark as manually expanded during search
+                // If searching, track manual expansion and remove from manually collapsed
                 if (currentSearchTerm.trim()) {
                     manuallyExpandedDuringSearch.add(nodeName);
+                    manuallyCollapsedDuringSearch.delete(nodeName);
                 }
             }
             
@@ -1147,11 +1150,13 @@
                 expandedNodes.clear();
                 expandedBeforeSearch.clear();
                 manuallyExpandedDuringSearch.clear();
+                manuallyCollapsedDuringSearch.clear();
             }
             // If starting a new search, save current expansion state
             else if (isNowSearching && !wasSearching && expandedBeforeSearch.size === 0) {
                 expandedBeforeSearch = new Set(expandedNodes);
                 manuallyExpandedDuringSearch.clear(); // Clear any previous manual expansions
+                manuallyCollapsedDuringSearch.clear(); // Clear any previous manual collapses
             }
             
             // Update previous search term
@@ -1247,9 +1252,13 @@
                 });
                 
                 // Add nodes that currently have matched children (auto-expand so matches are visible)
+                // BUT: exclude nodes that were manually collapsed by the user (manual action overrides auto-expansion)
                 // These will be collapsed automatically if they no longer have matches on next search change
                 nodesWithMatchedChildren.forEach(nodeName => {
-                    finalExpandedNodes.add(nodeName);
+                    // Only auto-expand if the user hasn't manually collapsed this node
+                    if (!manuallyCollapsedDuringSearch.has(nodeName)) {
+                        finalExpandedNodes.add(nodeName);
+                    }
                 });
                 
                 expandedNodes = finalExpandedNodes;
