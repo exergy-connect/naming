@@ -64,6 +64,14 @@ const physicsData = {
           ]
         },
         {
+          "name": "Information Theory",
+          "year": 1948,
+          "children": [
+            {"name": "Shannon Entropy", "year": 1948, "summary": "Mathematical measure of uncertainty or information content in a message or system. Fundamental concept in information theory that quantifies the amount of information needed to describe a random variable.", "people": ["Claude Shannon"]},
+            {"name": "Channel Capacity", "year": 1948, "summary": "Maximum rate at which information can be reliably transmitted over a communication channel, as determined by Shannon's channel coding theorem.", "people": ["Claude Shannon"]}
+          ]
+        },
+        {
           "name": "Quantum Information",
           "year": 1980,
           "children": [
