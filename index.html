@@ -534,6 +534,137 @@
             transform: translateX(3px);
         }
 
+        .context-modal-nobel {
+            margin-bottom: 25px;
+        }
+
+        .context-modal-nobel-label {
+            font-size: 0.9em;
+            color: rgba(255, 215, 0, 0.9);
+            margin-bottom: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .context-modal-nobel-label::before {
+            content: '🏆';
+            font-size: 1.2em;
+        }
+
+        .context-modal-nobel-topic {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .context-modal-nobel-topic-year {
+            font-size: 0.95em;
+            color: rgba(255, 215, 0, 0.9);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .context-modal-nobel-topic-description {
+            font-size: 0.9em;
+            color: rgba(255, 215, 0, 0.8);
+            line-height: 1.5;
+        }
+
+        .context-modal-nobel-people {
+            margin-top: 12px;
+        }
+
+        .context-modal-nobel-people-label {
+            font-size: 0.85em;
+            color: rgba(255, 215, 0, 0.7);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .context-modal-nobel-people-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .context-modal-nobel-person {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 4px;
+            color: rgba(255, 215, 0, 0.9);
+            font-size: 0.85em;
+        }
+
+        .context-modal-nobel-person-year {
+            color: rgba(255, 215, 0, 0.7);
+            font-size: 0.9em;
+            margin-left: 4px;
+        }
+
+        .context-modal-nobel-person {
+            position: relative;
+        }
+
+        .context-modal-nobel-person-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: rgba(15, 20, 40, 0.98);
+            color: rgba(255, 215, 0, 0.9);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            font-size: 0.85em;
+            line-height: 1.4;
+            width: 400px;
+            max-width: 400px;
+            white-space: normal;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            margin-bottom: 8px;
+        }
+
+        .context-modal-nobel-person:hover .context-modal-nobel-person-tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-12px);
+        }
+
+        .context-modal-nobel-person-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: rgba(255, 215, 0, 0.4);
+        }
+
+        .context-modal-nobel-person-tooltip-year {
+            font-weight: 600;
+            color: rgba(255, 215, 0, 1);
+            margin-bottom: 4px;
+        }
+
+        .context-modal-nobel-person-tooltip-description {
+            margin-bottom: 8px;
+        }
+
+        .context-modal-nobel-person-tooltip-description:last-child {
+            margin-bottom: 0;
+        }
+
         .context-modal-actions {
             display: flex;
             gap: 15px;
@@ -642,6 +773,7 @@
             <div class="context-modal-tags" id="contextModalTags"></div>
             <div class="context-modal-people" id="contextModalPeople"></div>
             <div class="context-modal-papers" id="contextModalPapers"></div>
+            <div class="context-modal-nobel" id="contextModalNobel"></div>
             <div class="context-modal-actions">
                 <button class="context-modal-button secondary" id="contextModalCancel">Cancel</button>
                 <button class="context-modal-button primary" id="contextModalWikipedia">Open Wikipedia</button>
@@ -1448,6 +1580,7 @@
             const tagsContainer = document.getElementById('contextModalTags');
             const peopleContainer = document.getElementById('contextModalPeople');
             const papersContainer = document.getElementById('contextModalPapers');
+            const nobelContainer = document.getElementById('contextModalNobel');
 
             title.textContent = nodeToUse.name;
             if (nodeToUse.year !== undefined) {
@@ -1565,6 +1698,114 @@
                 papersContainer.style.display = 'block';
             } else {
                 papersContainer.style.display = 'none';
+            }
+
+            // Display Nobel Prize information
+            nobelContainer.innerHTML = '';
+            let hasNobelInfo = false;
+
+            // Check if the topic itself won a Nobel Prize
+            if (nodeToUse.nobel && typeof nodeToUse.nobel === 'number' && nobelPrizes && nobelPrizes[nodeToUse.nobel]) {
+                hasNobelInfo = true;
+                const nobelLabel = document.createElement('div');
+                nobelLabel.className = 'context-modal-nobel-label';
+                nobelLabel.textContent = 'Nobel Prize in Physics';
+                nobelContainer.appendChild(nobelLabel);
+
+                const nobelTopic = document.createElement('div');
+                nobelTopic.className = 'context-modal-nobel-topic';
+                
+                const nobelYear = document.createElement('div');
+                nobelYear.className = 'context-modal-nobel-topic-year';
+                nobelYear.textContent = `${nodeToUse.nobel}`;
+                nobelTopic.appendChild(nobelYear);
+
+                const nobelDescription = document.createElement('div');
+                nobelDescription.className = 'context-modal-nobel-topic-description';
+                nobelDescription.textContent = nobelPrizes[nodeToUse.nobel];
+                nobelTopic.appendChild(nobelDescription);
+
+                nobelContainer.appendChild(nobelTopic);
+            }
+
+            // Check if any associated people won Nobel Prizes
+            if (nodeToUse.people && Array.isArray(nodeToUse.people) && peopleNobel) {
+                const peopleWithNobel = [];
+                nodeToUse.people.forEach(personName => {
+                    if (peopleNobel[personName] && Array.isArray(peopleNobel[personName]) && peopleNobel[personName].length > 0) {
+                        peopleWithNobel.push({
+                            name: personName,
+                            years: peopleNobel[personName]
+                        });
+                    }
+                });
+
+                if (peopleWithNobel.length > 0) {
+                    hasNobelInfo = true;
+                    
+                    // Add label if not already added
+                    if (!nobelContainer.querySelector('.context-modal-nobel-label')) {
+                        const nobelLabel = document.createElement('div');
+                        nobelLabel.className = 'context-modal-nobel-label';
+                        nobelLabel.textContent = 'Nobel Prize in Physics';
+                        nobelContainer.appendChild(nobelLabel);
+                    }
+
+                    const nobelPeople = document.createElement('div');
+                    nobelPeople.className = 'context-modal-nobel-people';
+
+                    const nobelPeopleLabel = document.createElement('div');
+                    nobelPeopleLabel.className = 'context-modal-nobel-people-label';
+                    nobelPeopleLabel.textContent = 'Awarded to:';
+                    nobelPeople.appendChild(nobelPeopleLabel);
+
+                    const nobelPeopleList = document.createElement('div');
+                    nobelPeopleList.className = 'context-modal-nobel-people-list';
+
+                    peopleWithNobel.forEach(person => {
+                        const personElement = document.createElement('span');
+                        personElement.className = 'context-modal-nobel-person';
+                        personElement.textContent = person.name;
+                        
+                        const yearElement = document.createElement('span');
+                        yearElement.className = 'context-modal-nobel-person-year';
+                        yearElement.textContent = `(${person.years.join(', ')})`;
+                        personElement.appendChild(yearElement);
+
+                        // Add tooltip with prize descriptions
+                        if (nobelPrizes) {
+                            const tooltip = document.createElement('div');
+                            tooltip.className = 'context-modal-nobel-person-tooltip';
+                            
+                            person.years.forEach((year, index) => {
+                                if (nobelPrizes[year]) {
+                                    const yearDiv = document.createElement('div');
+                                    yearDiv.className = 'context-modal-nobel-person-tooltip-year';
+                                    yearDiv.textContent = `${year}:`;
+                                    tooltip.appendChild(yearDiv);
+                                    
+                                    const descDiv = document.createElement('div');
+                                    descDiv.className = 'context-modal-nobel-person-tooltip-description';
+                                    descDiv.textContent = nobelPrizes[year];
+                                    tooltip.appendChild(descDiv);
+                                }
+                            });
+                            
+                            personElement.appendChild(tooltip);
+                        }
+
+                        nobelPeopleList.appendChild(personElement);
+                    });
+
+                    nobelPeople.appendChild(nobelPeopleList);
+                    nobelContainer.appendChild(nobelPeople);
+                }
+            }
+
+            if (hasNobelInfo) {
+                nobelContainer.style.display = 'block';
+            } else {
+                nobelContainer.style.display = 'none';
             }
 
             modal.classList.add('active');
