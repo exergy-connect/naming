@@ -45,6 +45,13 @@ const physicsData = {
       "year": 1900,
       "children": [
         {
+          "name": "Early Quantum Theory",
+          "year": 1900,
+          "children": [
+            {"name": "Planck Constant", "year": 1900, "summary": "Fundamental physical constant (h) that relates the energy of a photon to its frequency, E = hν. Introduced by Max Planck to explain blackbody radiation, marking the birth of quantum theory. The constant has a value of approximately 6.626 × 10⁻³⁴ joule-seconds and represents the fundamental quantum of action in nature.", "people": ["Max Planck"], "papers": [{"title": "On the Law of Distribution of Energy in the Normal Spectrum", "link": "https://en.wikipedia.org/wiki/Planck%27s_law"}], "nobel": 1918}
+          ]
+        },
+        {
           "name": "Quantum Mechanics",
           "year": 1925,
           "children": [
