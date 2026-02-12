@@ -115,6 +115,44 @@
             z-index: 1;
         }
 
+        .tabs-container {
+            padding: 0 30px;
+            background: rgba(20, 25, 45, 0.8);
+            border-bottom: 1px solid rgba(120, 119, 198, 0.2);
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: rgba(15, 20, 40, 0.5);
+            border: 2px solid rgba(120, 119, 198, 0.3);
+            border-radius: 8px 8px 0 0;
+            color: rgba(184, 184, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            font-weight: 500;
+            position: relative;
+            top: 2px;
+            border-bottom: none;
+        }
+
+        .tab:hover {
+            background: rgba(20, 25, 45, 0.7);
+            color: rgba(184, 184, 255, 0.9);
+            border-color: rgba(120, 119, 198, 0.5);
+        }
+
+        .tab.active {
+            background: rgba(20, 25, 45, 0.9);
+            color: #b8b8ff;
+            border-color: rgba(120, 119, 198, 0.6);
+            border-bottom: 2px solid rgba(20, 25, 45, 0.9);
+            top: 0;
+            box-shadow: 0 -2px 10px rgba(120, 119, 198, 0.2);
+        }
+
         .search-container {
             padding: 30px;
             background: rgba(20, 25, 45, 0.8);
@@ -734,6 +772,13 @@
             <p>Exploring and expanding on humanity's collective understanding</p>
         </div>
         
+        <div class="tabs-container">
+            <div class="tab active" data-view="concepts">Concepts</div>
+            <div class="tab" data-view="people">People</div>
+            <div class="tab" data-view="tags">Tags</div>
+            <div class="tab" data-view="papers">Papers</div>
+        </div>
+        
         <div class="search-container">
             <input 
                 type="text" 
@@ -788,6 +833,8 @@
     <script>
         // Global variable to hold the loaded hierarchy data
         let sampleHierarchy = null;
+        let currentView = 'concepts'; // 'concepts', 'people', 'tags', 'papers'
+        let consolidatedDataGlobal = null; // Store consolidated data for view switching
 
         // Convert consolidated data format to hierarchical format expected by UI
         function convertConsolidatedDataToHierarchy(consolidatedData) {
@@ -931,6 +978,344 @@
                 year: 2026,
                 children: rootChildren
             };
+        }
+
+        // Convert to People-centric view
+        function convertToPeopleView(consolidatedData) {
+            if (!consolidatedData || !consolidatedData.data) {
+                return null;
+            }
+
+            const people = consolidatedData.data.person || {};
+            const theories = consolidatedData.data.theory || {};
+            const peopleMap = new Map();
+
+            // Build map of person_id -> theories
+            Object.values(theories).forEach(theory => {
+                if (theory.people && Array.isArray(theory.people)) {
+                    theory.people.forEach(personId => {
+                        if (!peopleMap.has(personId)) {
+                            peopleMap.set(personId, []);
+                        }
+                        peopleMap.get(personId).push(theory);
+                    });
+                }
+            });
+
+            // Build hierarchy grouped by people
+            const peopleNodes = [];
+            Object.values(people).forEach(person => {
+                const personTheories = peopleMap.get(person.person_id) || [];
+                if (personTheories.length > 0) {
+                    const personNode = {
+                        name: person.name,
+                        year: person.birth_year || 0,
+                        summary: `${person.name} (${person.birth_year || '?'} - ${person.death_year || '?'})`,
+                        person_id: person.person_id,
+                        children: personTheories
+                            .sort((a, b) => (a.year || 0) - (b.year || 0))
+                            .map(theory => {
+                                const node = {
+                                    name: theory.name,
+                                    year: theory.year,
+                                    summary: theory.summary,
+                                    theory_id: theory.theory_id,
+                                    people: theory.people || [],
+                                    tags: theory.tags || [],
+                                    papers: theory.papers || [],
+                                    children: []
+                                };
+                                // Add nested items
+                                if (theory.assumptions) {
+                                    theory.assumptions.forEach(a => {
+                                        node.children.push({
+                                            name: `Assumption: ${a.statement.substring(0, 50)}...`,
+                                            year: theory.year,
+                                            summary: a.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.postulates) {
+                                    theory.postulates.forEach(p => {
+                                        node.children.push({
+                                            name: `Postulate: ${p.statement.substring(0, 50)}...`,
+                                            year: p.formulation_year || theory.year,
+                                            summary: p.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.claims) {
+                                    theory.claims.forEach(c => {
+                                        node.children.push({
+                                            name: `Claim: ${c.statement.substring(0, 50)}...`,
+                                            year: c.verification_year || theory.year,
+                                            summary: c.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.predictions) {
+                                    theory.predictions.forEach(p => {
+                                        node.children.push({
+                                            name: `Prediction: ${p.statement.substring(0, 50)}...`,
+                                            year: p.prediction_year || theory.year,
+                                            summary: p.statement,
+                                            prediction_year: p.prediction_year,
+                                            verification_year: p.verification_year,
+                                            verification_method: p.verification_method,
+                                            status: p.status,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                return node;
+                            })
+                    };
+                    peopleNodes.push(personNode);
+                }
+            });
+
+            // Sort by birth year
+            peopleNodes.sort((a, b) => (a.year || 0) - (b.year || 0));
+
+            return {
+                name: "Physics by People",
+                year: 2026,
+                children: peopleNodes
+            };
+        }
+
+        // Convert to Tags-centric view
+        function convertToTagsView(consolidatedData) {
+            if (!consolidatedData || !consolidatedData.data) {
+                return null;
+            }
+
+            const tags = consolidatedData.data.tag || {};
+            const theories = consolidatedData.data.theory || {};
+            const tagsMap = new Map();
+
+            // Build map of tag_id -> theories
+            Object.values(theories).forEach(theory => {
+                if (theory.tags && Array.isArray(theory.tags)) {
+                    theory.tags.forEach(tagId => {
+                        if (!tagsMap.has(tagId)) {
+                            tagsMap.set(tagId, []);
+                        }
+                        tagsMap.get(tagId).push(theory);
+                    });
+                }
+            });
+
+            // Build hierarchy grouped by tags
+            const tagNodes = [];
+            Object.values(tags).forEach(tag => {
+                const tagTheories = tagsMap.get(tag.tag_id) || [];
+                if (tagTheories.length > 0) {
+                    const tagNode = {
+                        name: tag.name,
+                        year: Math.min(...tagTheories.map(t => t.year || 0)),
+                        summary: `Theories tagged with: ${tag.name}`,
+                        tag_id: tag.tag_id,
+                        children: tagTheories
+                            .sort((a, b) => (a.year || 0) - (b.year || 0))
+                            .map(theory => {
+                                const node = {
+                                    name: theory.name,
+                                    year: theory.year,
+                                    summary: theory.summary,
+                                    theory_id: theory.theory_id,
+                                    people: theory.people || [],
+                                    tags: theory.tags || [],
+                                    papers: theory.papers || [],
+                                    children: []
+                                };
+                                // Add nested items (same as people view)
+                                if (theory.assumptions) {
+                                    theory.assumptions.forEach(a => {
+                                        node.children.push({
+                                            name: `Assumption: ${a.statement.substring(0, 50)}...`,
+                                            year: theory.year,
+                                            summary: a.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.postulates) {
+                                    theory.postulates.forEach(p => {
+                                        node.children.push({
+                                            name: `Postulate: ${p.statement.substring(0, 50)}...`,
+                                            year: p.formulation_year || theory.year,
+                                            summary: p.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.claims) {
+                                    theory.claims.forEach(c => {
+                                        node.children.push({
+                                            name: `Claim: ${c.statement.substring(0, 50)}...`,
+                                            year: c.verification_year || theory.year,
+                                            summary: c.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.predictions) {
+                                    theory.predictions.forEach(p => {
+                                        node.children.push({
+                                            name: `Prediction: ${p.statement.substring(0, 50)}...`,
+                                            year: p.prediction_year || theory.year,
+                                            summary: p.statement,
+                                            prediction_year: p.prediction_year,
+                                            verification_year: p.verification_year,
+                                            verification_method: p.verification_method,
+                                            status: p.status,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                return node;
+                            })
+                    };
+                    tagNodes.push(tagNode);
+                }
+            });
+
+            // Sort by name
+            tagNodes.sort((a, b) => a.name.localeCompare(b.name));
+
+            return {
+                name: "Physics by Tags",
+                year: 2026,
+                children: tagNodes
+            };
+        }
+
+        // Convert to Papers-centric view
+        function convertToPapersView(consolidatedData) {
+            if (!consolidatedData || !consolidatedData.data) {
+                return null;
+            }
+
+            const papers = consolidatedData.data.paper || {};
+            const theories = consolidatedData.data.theory || {};
+            const papersMap = new Map();
+
+            // Build map of paper_id -> theories
+            Object.values(theories).forEach(theory => {
+                if (theory.papers && Array.isArray(theory.papers)) {
+                    theory.papers.forEach(paperId => {
+                        if (!papersMap.has(paperId)) {
+                            papersMap.set(paperId, []);
+                        }
+                        papersMap.get(paperId).push(theory);
+                    });
+                }
+            });
+
+            // Build hierarchy grouped by papers
+            const paperNodes = [];
+            Object.values(papers).forEach(paper => {
+                const paperTheories = papersMap.get(paper.paper_id) || [];
+                if (paperTheories.length > 0) {
+                    const paperNode = {
+                        name: paper.title,
+                        year: paper.year || 0,
+                        summary: `${paper.title} (${paper.year || '?'})`,
+                        paper_id: paper.paper_id,
+                        link: paper.link,
+                        children: paperTheories
+                            .sort((a, b) => (a.year || 0) - (b.year || 0))
+                            .map(theory => {
+                                const node = {
+                                    name: theory.name,
+                                    year: theory.year,
+                                    summary: theory.summary,
+                                    theory_id: theory.theory_id,
+                                    people: theory.people || [],
+                                    tags: theory.tags || [],
+                                    papers: theory.papers || [],
+                                    children: []
+                                };
+                                // Add nested items (same as people view)
+                                if (theory.assumptions) {
+                                    theory.assumptions.forEach(a => {
+                                        node.children.push({
+                                            name: `Assumption: ${a.statement.substring(0, 50)}...`,
+                                            year: theory.year,
+                                            summary: a.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.postulates) {
+                                    theory.postulates.forEach(p => {
+                                        node.children.push({
+                                            name: `Postulate: ${p.statement.substring(0, 50)}...`,
+                                            year: p.formulation_year || theory.year,
+                                            summary: p.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.claims) {
+                                    theory.claims.forEach(c => {
+                                        node.children.push({
+                                            name: `Claim: ${c.statement.substring(0, 50)}...`,
+                                            year: c.verification_year || theory.year,
+                                            summary: c.statement,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                if (theory.predictions) {
+                                    theory.predictions.forEach(p => {
+                                        node.children.push({
+                                            name: `Prediction: ${p.statement.substring(0, 50)}...`,
+                                            year: p.prediction_year || theory.year,
+                                            summary: p.statement,
+                                            prediction_year: p.prediction_year,
+                                            verification_year: p.verification_year,
+                                            verification_method: p.verification_method,
+                                            status: p.status,
+                                            parentTheory: node
+                                        });
+                                    });
+                                }
+                                return node;
+                            })
+                    };
+                    paperNodes.push(paperNode);
+                }
+            });
+
+            // Sort by year
+            paperNodes.sort((a, b) => (a.year || 0) - (b.year || 0));
+
+            return {
+                name: "Physics by Papers",
+                year: 2026,
+                children: paperNodes
+            };
+        }
+
+        // Get hierarchy based on current view
+        function getHierarchyForView(view, consolidatedData) {
+            switch(view) {
+                case 'concepts':
+                    return convertConsolidatedDataToHierarchy(consolidatedData);
+                case 'people':
+                    return convertToPeopleView(consolidatedData);
+                case 'tags':
+                    return convertToTagsView(consolidatedData);
+                case 'papers':
+                    return convertToPapersView(consolidatedData);
+                default:
+                    return convertConsolidatedDataToHierarchy(consolidatedData);
+            }
         }
 
         // Trie Node class
@@ -1195,6 +1580,66 @@
             }
         }
 
+        // Switch to a different view
+        function switchView(view) {
+            if (!consolidatedDataGlobal) {
+                console.error('No consolidated data available');
+                return;
+            }
+
+            currentView = view;
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                if (tab.dataset.view === view) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // Convert to the selected view
+            const hierarchy = getHierarchyForView(view, consolidatedDataGlobal);
+            if (!hierarchy) {
+                console.error('Failed to convert data to hierarchy');
+                return;
+            }
+
+            // Use the converted hierarchical data
+            sampleHierarchy = hierarchy;
+            
+            // Set parent years to minimum of children (except root which stays at 2026)
+            setParentYears(sampleHierarchy, true);
+            
+            // Sort each hierarchy level by year
+            sortByYear(sampleHierarchy);
+            
+            // Find year range for color mapping (excluding root node)
+            minYear = Infinity;
+            maxYear = -Infinity;
+            findYearRange(sampleHierarchy, true);
+            
+            // Rebuild trie with new hierarchy
+            trie = new Trie();
+            buildTrie(sampleHierarchy, trie);
+            
+            // Clear search and refresh tree
+            const searchBox = document.getElementById('searchBox');
+            searchBox.value = '';
+            previousSearchTerm = '';
+            
+            // Update search placeholder based on view
+            const placeholders = {
+                'concepts': 'Enter search criteria...',
+                'people': 'Search people...',
+                'tags': 'Search tags...',
+                'papers': 'Search papers...'
+            };
+            searchBox.placeholder = placeholders[view] || 'Enter search criteria...';
+            
+            updateTree();
+        }
+
         // Initialize data from script-loaded consolidated_data.js
         function initializeData() {
             if (typeof consolidatedData === 'undefined') {
@@ -1204,8 +1649,11 @@
                 return;
             }
 
-            // Convert consolidated data format to hierarchical format
-            const hierarchy = convertConsolidatedDataToHierarchy(consolidatedData);
+            // Store consolidated data globally for view switching
+            consolidatedDataGlobal = consolidatedData;
+
+            // Convert consolidated data format to hierarchical format based on current view
+            const hierarchy = getHierarchyForView(currentView, consolidatedData);
             if (!hierarchy) {
                 console.error('Failed to convert consolidated data to hierarchy');
                 document.getElementById('treeRoot').innerHTML = 
@@ -1235,6 +1683,14 @@
             
             // Initialize tree display
             updateTree();
+
+            // Add tab click handlers
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const view = tab.dataset.view;
+                    switchView(view);
+                });
+            });
         }
 
         function renderTree(node, parentElement, searchTerm = '', visibleNodes = null, forceVisible = false) {
@@ -1931,26 +2387,50 @@
             // Display papers
             papersContainer.innerHTML = '';
             if (nodeToUse.papers && Array.isArray(nodeToUse.papers) && nodeToUse.papers.length > 0) {
-                const papersLabel = document.createElement('div');
-                papersLabel.className = 'context-modal-papers-label';
-                papersLabel.textContent = 'Key Papers:';
-                papersContainer.appendChild(papersLabel);
-
-                const papersList = document.createElement('div');
-                papersList.className = 'context-modal-papers-list';
-
-                nodeToUse.papers.forEach(paper => {
-                    const paperLink = document.createElement('a');
-                    paperLink.className = 'context-modal-paper';
-                    paperLink.textContent = paper.title;
-                    paperLink.href = paper.link;
-                    paperLink.target = '_blank';
-                    paperLink.rel = 'noopener noreferrer';
-                    papersList.appendChild(paperLink);
+                // Get papers from consolidated data (papers array contains paper IDs)
+                const papers = typeof consolidatedData !== 'undefined' && consolidatedData.data 
+                    ? consolidatedData.data.paper || {} 
+                    : {};
+                
+                // Resolve paper IDs to paper objects
+                const paperObjects = [];
+                nodeToUse.papers.forEach(paperId => {
+                    if (typeof paperId === 'string') {
+                        // It's a paper ID, look it up
+                        const paper = papers[paperId];
+                        if (paper) {
+                            paperObjects.push(paper);
+                        }
+                    } else if (typeof paperId === 'object' && paperId.title) {
+                        // It's already a paper object (legacy format)
+                        paperObjects.push(paperId);
+                    }
                 });
 
-                papersContainer.appendChild(papersList);
-                papersContainer.style.display = 'block';
+                if (paperObjects.length > 0) {
+                    const papersLabel = document.createElement('div');
+                    papersLabel.className = 'context-modal-papers-label';
+                    papersLabel.textContent = 'Key Papers:';
+                    papersContainer.appendChild(papersLabel);
+
+                    const papersList = document.createElement('div');
+                    papersList.className = 'context-modal-papers-list';
+
+                    paperObjects.forEach(paper => {
+                        const paperLink = document.createElement('a');
+                        paperLink.className = 'context-modal-paper';
+                        paperLink.textContent = paper.title || 'Unknown Paper';
+                        paperLink.href = paper.link || '#';
+                        paperLink.target = '_blank';
+                        paperLink.rel = 'noopener noreferrer';
+                        papersList.appendChild(paperLink);
+                    });
+
+                    papersContainer.appendChild(papersList);
+                    papersContainer.style.display = 'block';
+                } else {
+                    papersContainer.style.display = 'none';
+                }
             } else {
                 papersContainer.style.display = 'none';
             }
