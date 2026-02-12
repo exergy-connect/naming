@@ -4,6 +4,74 @@ const consolidatedModel = {
   "title": "Consolidated Data Model",
   "description": "Consolidated entity schemas from data model files",
   "$defs": {
+    "anomaly": {
+      "type": "object",
+      "properties": {
+        "anomaly_id": {
+          "type": "string",
+          "description": "Unique identifier for the anomaly (e.g., 'mercury-perihelion-precession', 'ultraviolet-catastrophe')"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the anomaly or phenomenon (e.g., 'Mercury's Perihelion Precession', 'Ultraviolet Catastrophe')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the anomaly, what was observed, and why it challenges the theory"
+        },
+        "theory_id": {
+          "type": "string",
+          "description": "Reference to the theory that this anomaly challenges or violates"
+        },
+        "violated_assumptions": {
+          "type": "array",
+          "description": "List of assumptions that this anomaly appears to violate or challenge (nested children)",
+          "items": {
+            "$ref": "#/$defs/violated_assumption"
+          }
+        },
+        "violated_claims": {
+          "type": "array",
+          "description": "Array of claim IDs that this anomaly appears to violate or challenge",
+          "items": {
+            "type": "string"
+          }
+        },
+        "discovery_year": {
+          "type": "integer",
+          "description": "Year when this anomaly was first observed or discovered"
+        },
+        "explanation_theory_id": {
+          "type": "string",
+          "description": "Reference to the theory that explains or resolves this anomaly (if applicable)"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "Description of how the anomaly was explained or resolved, including the explanation year and mechanism. Format: 'Year: [year]. [description]' or just '[description]' if year is in explanation_theory_id's theory year."
+        },
+        "papers": {
+          "type": "array",
+          "description": "Array of paper IDs related to this anomaly (discovery papers, explanation papers, etc.)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "people": {
+          "type": "array",
+          "description": "Array of person IDs associated with this anomaly (discoverers, explainers, etc.)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "anomaly_id",
+        "name",
+        "theory_id"
+      ],
+      "x-created": 1,
+      "x-version": 1
+    },
     "assumption": {
       "type": "object",
       "properties": {
@@ -387,6 +455,13 @@ const consolidatedModel = {
             "$ref": "#/$defs/prediction"
           }
         },
+        "anomalies": {
+          "type": "array",
+          "description": "Array of anomaly IDs that challenge or are explained by this theory",
+          "items": {
+            "type": "string"
+          }
+        },
         "papers": {
           "type": "array",
           "description": "Array of paper IDs referencing key papers related to this theory",
@@ -427,10 +502,44 @@ const consolidatedModel = {
       ],
       "x-created": 1,
       "x-version": 1
+    },
+    "violated_assumption": {
+      "type": "object",
+      "properties": {
+        "violated_assumption_id": {
+          "type": "string",
+          "description": "Unique identifier for this violated assumption record"
+        },
+        "anomaly_id": {
+          "type": "string",
+          "description": "Reference to the parent anomaly"
+        },
+        "assumption_id": {
+          "type": "string",
+          "description": "Reference to the assumption from the theory that is being violated"
+        },
+        "violation_description": {
+          "type": "string",
+          "description": "Description of how this specific assumption is violated by the anomaly"
+        }
+      },
+      "required": [
+        "violated_assumption_id",
+        "anomaly_id",
+        "assumption_id"
+      ],
+      "x-created": 1,
+      "x-version": 1
     }
   },
   "type": "object",
   "properties": {
+    "anomaly": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/anomaly"
+      }
+    },
     "assumption": {
       "type": "array",
       "items": {
@@ -489,6 +598,12 @@ const consolidatedModel = {
       "type": "array",
       "items": {
         "$ref": "#/$defs/theory"
+      }
+    },
+    "violated_assumption": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/violated_assumption"
       }
     }
   },

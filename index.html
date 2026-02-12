@@ -184,14 +184,40 @@
                 inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .tree-container {
+        .split-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            gap: 20px;
             padding: 30px;
+            background: rgba(15, 20, 40, 0.5);
+        }
+
+        .tree-container {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            background: rgba(15, 20, 40, 0.5);
             display: flex;
             flex-direction: column;
+            min-width: 0;
+        }
+
+        .tree-container.left {
+            border-right: 2px solid rgba(120, 119, 198, 0.3);
+            padding-right: 20px;
+        }
+
+        .tree-container.right {
+            padding-left: 20px;
+        }
+
+        .tree-container-header {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #b8b8ff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(120, 119, 198, 0.3);
         }
 
         .tree-container::-webkit-scrollbar {
@@ -789,10 +815,20 @@
             />
         </div>
 
-        <div class="tree-container">
-            <ul class="tree" id="treeRoot"></ul>
-            <div class="no-results" id="noResults" style="display: none;">
-                No results found
+        <div class="split-container">
+            <div class="tree-container left">
+                <div class="tree-container-header">Theories</div>
+                <ul class="tree" id="treeRoot"></ul>
+                <div class="no-results" id="noResults" style="display: none;">
+                    No results found
+                </div>
+            </div>
+            <div class="tree-container right">
+                <div class="tree-container-header">Anomalies</div>
+                <ul class="tree" id="anomalyTreeRoot"></ul>
+                <div class="no-results" id="anomalyNoResults" style="display: none;">
+                    No anomalies found
+                </div>
             </div>
         </div>
 
@@ -1467,6 +1503,34 @@
                 });
             }
             
+            // For anomalies and violated assumptions, index description and explanation text
+            // BUT: only index full words, and require word boundaries for matching
+            // This prevents "hub" from matching "hubble" unless it's a complete word
+            if (node.anomaly_id || node.violated_assumption_id || node.summary || node.explanation) {
+                if (node.summary) {
+                    const words = node.summary.toLowerCase().split(/\s+/);
+                    words.forEach(word => {
+                        // Clean word of punctuation for indexing
+                        const cleanWord = word.replace(/[^\w]/g, '');
+                        // Filter out common words and keep meaningful terms
+                        if (cleanWord.length > 3 && !['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'its', 'may', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'].includes(cleanWord)) {
+                            // Only index if the search term would match as a complete word or prefix
+                            // This prevents substring matches like "hub" matching "hubble"
+                            trie.insert(cleanWord, node);
+                        }
+                    });
+                }
+                if (node.explanation) {
+                    const words = node.explanation.toLowerCase().split(/\s+/);
+                    words.forEach(word => {
+                        const cleanWord = word.replace(/[^\w]/g, '');
+                        if (cleanWord.length > 3 && !['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'its', 'may', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'].includes(cleanWord)) {
+                            trie.insert(cleanWord, node);
+                        }
+                    });
+                }
+            }
+            
             // Insert people names associated with this node
             if (node.people && Array.isArray(node.people)) {
                 node.people.forEach(personName => {
@@ -1492,6 +1556,7 @@
 
         // Global variables
         let trie = null;
+        let anomalyTrie = null;
         let expandedNodes = new Set();
         let matchedNodes = new Set();
         let minYear = Infinity;
@@ -1684,6 +1749,9 @@
             // Initialize tree display
             updateTree();
 
+            // Initialize anomaly tree
+            initializeAnomalyTree(consolidatedData);
+
             // Add tab click handlers
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -1691,6 +1759,371 @@
                     switchView(view);
                 });
             });
+        }
+
+        // Build anomaly hierarchy grouped by theory
+        function buildAnomalyHierarchy(consolidatedData) {
+            if (!consolidatedData || !consolidatedData.data || !consolidatedData.data.anomaly) {
+                return null;
+            }
+
+            const anomalies = consolidatedData.data.anomaly;
+            const theories = consolidatedData.data.theory || {};
+            const violatedAssumptions = consolidatedData.data.violated_assumption || {};
+
+            // Group anomalies by theory_id
+            const anomaliesByTheory = {};
+            Object.values(anomalies).forEach(anomaly => {
+                const theoryId = anomaly.theory_id;
+                if (!anomaliesByTheory[theoryId]) {
+                    anomaliesByTheory[theoryId] = [];
+                }
+                anomaliesByTheory[theoryId].push(anomaly);
+            });
+
+            // Build hierarchy: Theory -> Anomalies -> Violated Assumptions
+            const root = {
+                name: 'Anomalies',
+                year: 2026,
+                children: []
+            };
+
+            Object.keys(anomaliesByTheory).forEach(theoryId => {
+                const theory = theories[theoryId];
+                if (!theory) return;
+
+                const theoryNode = {
+                    name: theory.name || theoryId,
+                    year: theory.year || 0,
+                    summary: `Theory: ${theory.name}`,
+                    theory_id: theoryId,
+                    children: []
+                };
+
+                anomaliesByTheory[theoryId].forEach(anomaly => {
+                    const anomalyNode = {
+                        name: anomaly.name,
+                        year: anomaly.discovery_year || 0,
+                        summary: anomaly.description || '',
+                        anomaly_id: anomaly.anomaly_id,
+                        explanation: anomaly.explanation || '',
+                        explanation_theory_id: anomaly.explanation_theory_id,
+                        children: []
+                    };
+
+                    // Add violated assumptions as children (they're nested objects, not IDs)
+                    if (anomaly.violated_assumptions && Array.isArray(anomaly.violated_assumptions)) {
+                        anomaly.violated_assumptions.forEach(violatedAssumption => {
+                            if (typeof violatedAssumption === 'object' && violatedAssumption !== null) {
+                                const desc = violatedAssumption.violation_description || 'Assumption violated';
+                                anomalyNode.children.push({
+                                    name: `Violated: ${desc.substring(0, 60)}${desc.length > 60 ? '...' : ''}`,
+                                    year: anomaly.discovery_year || 0,
+                                    summary: desc,
+                                    assumption_id: violatedAssumption.assumption_id,
+                                    violated_assumption_id: violatedAssumption.violated_assumption_id
+                                });
+                            }
+                        });
+                    }
+
+                    // Add violated claims
+                    if (anomaly.violated_claims && Array.isArray(anomaly.violated_claims)) {
+                        anomaly.violated_claims.forEach(claimId => {
+                            anomalyNode.children.push({
+                                name: `Violated Claim: ${claimId}`,
+                                year: anomaly.discovery_year || 0,
+                                summary: `Claim ${claimId} is violated`,
+                                claim_id: claimId
+                            });
+                        });
+                    }
+
+                    theoryNode.children.push(anomalyNode);
+                });
+
+                root.children.push(theoryNode);
+            });
+
+            // Sort by year
+            root.children.sort((a, b) => (a.year || 0) - (b.year || 0));
+            root.children.forEach(theoryNode => {
+                theoryNode.children.sort((a, b) => (a.year || 0) - (b.year || 0));
+            });
+
+            return root;
+        }
+
+        // Initialize anomaly tree
+        function initializeAnomalyTree(consolidatedData) {
+            const anomalyHierarchy = buildAnomalyHierarchy(consolidatedData);
+            if (!anomalyHierarchy) {
+                document.getElementById('anomalyTreeRoot').innerHTML = 
+                    '<div class="no-results">No anomalies found</div>';
+                return;
+            }
+
+            // Set parent years
+            setParentYears(anomalyHierarchy, true);
+            
+            // Sort by year
+            sortByYear(anomalyHierarchy);
+            
+            // Build trie for anomaly search
+            anomalyTrie = new Trie();
+            buildTrie(anomalyHierarchy, anomalyTrie);
+            
+            // Update anomaly tree display
+            updateAnomalyTree();
+            
+            // Store for later use
+            window.anomalyHierarchy = anomalyHierarchy;
+        }
+
+        // Update anomaly tree display
+        // Uses identical logic to updateTree for consistency
+        function updateAnomalyTree(searchTerm = '') {
+            if (!window.anomalyHierarchy) {
+                return;
+            }
+
+            const treeRoot = document.getElementById('anomalyTreeRoot');
+            treeRoot.innerHTML = '';
+            
+            // Clear previous matched nodes for anomalies
+            const anomalyMatchedNodes = new Set();
+            const anomalyVisibleNodes = new Set();
+            
+            if (searchTerm.trim() && anomalyTrie) {
+                // Find matching nodes in anomaly tree
+                const matches = anomalyTrie.searchSubstring(searchTerm);
+                
+                matches.forEach(node => {
+                    anomalyMatchedNodes.add(node.name);
+                    // Mark this node and all its ancestors as visible
+                    markAncestorsVisible(node, window.anomalyHierarchy, anomalyVisibleNodes);
+                });
+                
+                // Always include root in visible nodes
+                if (window.anomalyHierarchy) {
+                    anomalyVisibleNodes.add(window.anomalyHierarchy.name);
+                }
+                
+                // Build final expanded nodes set (same logic as updateTree)
+                const finalExpandedNodes = new Set();
+                
+                // Track which nodes have matched children - auto-expand parents to show matches
+                const nodesWithMatchedChildren = new Set();
+                matches.forEach(matchedNode => {
+                    const parent = findParentNode(window.anomalyHierarchy, matchedNode);
+                    if (parent) nodesWithMatchedChildren.add(parent.name);
+                });
+                
+                // 1. Keep manually expanded nodes from before search (if still visible)
+                expandedBeforeSearch.forEach(nodeName => {
+                    if (anomalyVisibleNodes.has(nodeName)) {
+                        finalExpandedNodes.add(nodeName);
+                    }
+                });
+                
+                // 2. Keep manually expanded nodes during search (make them visible)
+                manuallyExpandedDuringSearch.forEach(nodeName => {
+                    finalExpandedNodes.add(nodeName);
+                    findAndMarkNodeVisible(window.anomalyHierarchy, nodeName, anomalyVisibleNodes);
+                });
+                
+                // 3. Auto-expand nodes with matched children (unless manually collapsed)
+                nodesWithMatchedChildren.forEach(nodeName => {
+                    if (!manuallyCollapsedDuringSearch.has(nodeName)) {
+                        finalExpandedNodes.add(nodeName);
+                    }
+                });
+                
+                // 4. Remove manually collapsed nodes and their descendants
+                removeCollapsedAndDescendants(window.anomalyHierarchy, manuallyCollapsedDuringSearch, finalExpandedNodes);
+                
+                expandedNodes = finalExpandedNodes;
+            } else {
+                // No search: all nodes are visible
+                const markAllVisible = (node) => {
+                    anomalyVisibleNodes.add(node.name);
+                    if (node.children) {
+                        node.children.forEach(child => markAllVisible(child));
+                    }
+                };
+                markAllVisible(window.anomalyHierarchy);
+            }
+            
+            renderAnomalyTree(window.anomalyHierarchy, treeRoot, searchTerm, anomalyVisibleNodes, anomalyMatchedNodes);
+            
+            // Show "no results" message if searching and no matches found
+            const noResultsDiv = document.getElementById('anomalyNoResults');
+            if (searchTerm.trim() && anomalyMatchedNodes.size === 0 && anomalyVisibleNodes.size <= 1) {
+                // Only show "no results" if no matches AND only root is visible (no manually expanded nodes)
+                noResultsDiv.style.display = 'block';
+            } else {
+                noResultsDiv.style.display = 'none';
+            }
+        }
+
+        // Render anomaly tree (similar to renderTree but for anomalies)
+        function renderAnomalyTree(node, parentElement, searchTerm = '', visibleNodes = null, matchedNodes = null) {
+            // If searching and visibleNodes is set, only render if this node is visible
+            const isRoot = parentElement.id === 'anomalyTreeRoot';
+            if (visibleNodes && visibleNodes.size > 0 && !isRoot) {
+                if (!visibleNodes.has(node.name)) {
+                    return false; // Don't render this node if it's not visible
+                }
+            }
+            
+            const li = document.createElement('li');
+            li.className = 'tree-node';
+            li.dataset.nodeName = node.name;
+
+            const content = document.createElement('div');
+            content.className = 'tree-node-content';
+            
+            const hasChildren = node.children && node.children.length > 0;
+            const isExpanded = expandedNodes.has(node.name);
+            const isMatched = matchedNodes && matchedNodes.has(node.name);
+            const isHighlighted = searchTerm && node.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+            // Apply year-based color
+            if (node.year !== undefined) {
+                const yearColor = yearToColor(node.year);
+                const opacity = isMatched || isHighlighted ? '60' : '40';
+                content.style.borderLeft = `4px solid ${yearColor}`;
+                content.style.boxShadow = `0 0 10px ${yearColor}${opacity}`;
+            }
+
+            if (isMatched) {
+                content.classList.add('matched');
+            } else if (isHighlighted) {
+                content.classList.add('highlight');
+            }
+
+            // Toggle button
+            const toggle = document.createElement('span');
+            toggle.className = 'tree-toggle';
+            if (!hasChildren) {
+                toggle.classList.add('no-children');
+                toggle.textContent = '•';
+            } else {
+                toggle.textContent = isExpanded ? '▼' : '▶';
+                if (!isExpanded) {
+                    toggle.classList.add('collapsed');
+                }
+                toggle.onclick = (e) => {
+                    e.stopPropagation();
+                    const searchBox = document.getElementById('searchBox');
+                    const currentSearchTerm = searchBox ? searchBox.value : '';
+                    toggleNode(node.name);
+                    updateAnomalyTree(currentSearchTerm);
+                    updateTree(currentSearchTerm); // Also update main tree in case of shared nodes
+                };
+            }
+
+            // Label
+            const label = document.createElement('span');
+            label.className = 'tree-label';
+            label.textContent = node.name;
+            if (node.year) {
+                label.textContent += ` (${node.year})`;
+            }
+            
+            label.onclick = () => {
+                if (hasChildren) {
+                    const searchBox = document.getElementById('searchBox');
+                    const currentSearchTerm = searchBox ? searchBox.value : '';
+                    toggleNode(node.name);
+                    updateAnomalyTree(currentSearchTerm);
+                    updateTree(currentSearchTerm); // Also update main tree in case of shared nodes
+                } else {
+                    // Show details in modal if available
+                    if (node.summary || node.explanation) {
+                        showAnomalyDetails(node);
+                    }
+                }
+            };
+
+            content.appendChild(toggle);
+            content.appendChild(label);
+            li.appendChild(content);
+
+            // Children
+            if (hasChildren) {
+                const childrenUl = document.createElement('ul');
+                childrenUl.className = 'tree-children';
+                
+                // During search, show filtered children OR all children if manually expanded
+                let childrenToShow;
+                if (searchTerm.trim() && visibleNodes && visibleNodes.size > 0 && !isExpanded) {
+                    // Not expanded: only show children that match the search filter
+                    childrenToShow = node.children.filter(child => visibleNodes.has(child.name));
+                } else if (isExpanded) {
+                    // Manually expanded: show ALL children regardless of search filter
+                    childrenToShow = node.children;
+                } else {
+                    // No search: show all children
+                    childrenToShow = node.children;
+                }
+                
+                // Set visibility: if expanded OR if there are visible children to show (during search)
+                const shouldShowChildren = isExpanded || (searchTerm.trim() && childrenToShow.length > 0);
+                if (shouldShowChildren) {
+                    childrenUl.classList.remove('hidden');
+                } else {
+                    childrenUl.classList.add('hidden');
+                }
+                
+                // If this node is manually expanded, render all children even if they don't match the search filter
+                const forceChildrenVisible = isExpanded;
+                childrenToShow.forEach(child => {
+                    renderAnomalyTree(child, childrenUl, searchTerm, visibleNodes, matchedNodes);
+                });
+                
+                li.appendChild(childrenUl);
+            }
+
+            parentElement.appendChild(li);
+            return true; // Indicate that the node was rendered
+        }
+
+        // Show anomaly details in modal
+        function showAnomalyDetails(node) {
+            const modal = document.getElementById('contextModal');
+            const title = document.getElementById('contextModalTitle');
+            const year = document.getElementById('contextModalYear');
+            const summary = document.getElementById('contextModalSummary');
+
+            title.textContent = node.name;
+            if (node.year !== undefined) {
+                year.textContent = `Year: ${node.year}`;
+                // Apply year-based color to the year text
+                const yearColor = yearToColor(node.year);
+                year.style.color = yearColor;
+                year.style.textShadow = `
+                    0 0 5px ${yearColor},
+                    0 0 10px ${yearColor}80,
+                    0 0 15px ${yearColor}60
+                `;
+            } else {
+                year.textContent = '';
+                year.style.color = '';
+                year.style.textShadow = '';
+            }
+            summary.textContent = node.summary || node.explanation || 'No description available';
+
+            // Hide other modal sections
+            document.getElementById('contextModalTags').style.display = 'none';
+            document.getElementById('contextModalPeople').style.display = 'none';
+            document.getElementById('contextModalPapers').style.display = 'none';
+            document.getElementById('contextModalNobel').style.display = 'none';
+            document.getElementById('contextModalWikipedia').style.display = 'none';
+
+            // Use the same method as the main modal (classList.add('active'))
+            modal.classList.add('active');
+            currentModalNode = node;
         }
 
         function renderTree(node, parentElement, searchTerm = '', visibleNodes = null, forceVisible = false) {
@@ -1908,41 +2341,57 @@
         }
 
         function toggleNode(nodeName) {
-            // Get current search term from the search box to maintain search filtering
+            // Get current search term from the search box
             const searchBox = document.getElementById('searchBox');
             const currentSearchTerm = searchBox ? searchBox.value : '';
-            
-            // During search, check if this node is visible (matched or ancestor of match)
-            if (currentSearchTerm.trim()) {
-                // Recalculate visibleNodes to check if this node is visible
-                const tempVisibleNodes = new Set();
-                const matches = trie.searchSubstring(currentSearchTerm);
-                matches.forEach(node => {
-                    markAncestorsVisible(node, sampleHierarchy, tempVisibleNodes);
-                });
-                if (sampleHierarchy) {
-                    tempVisibleNodes.add(sampleHierarchy.name);
-                }
-                
-                // Only allow expansion/collapse if node is visible (matched or in path)
-                if (!tempVisibleNodes.has(nodeName)) {
-                    return; // Don't allow toggle of nodes not visible during search
-                }
-            }
+            const isSearching = currentSearchTerm.trim();
             
             // Toggle the expansion state
             const wasExpanded = expandedNodes.has(nodeName);
+            
             if (wasExpanded) {
                 expandedNodes.delete(nodeName);
-                // If searching, track manual collapse and remove from manually expanded
-                if (currentSearchTerm.trim()) {
+                if (isSearching) {
                     manuallyExpandedDuringSearch.delete(nodeName);
                     manuallyCollapsedDuringSearch.add(nodeName);
                 }
+                
+                // Cascade collapse: collapse all descendants too
+                // This ensures that when a user collapses a node, all children collapse even if they match the search
+                const collapseDescendants = (node) => {
+                    if (node.children) {
+                        node.children.forEach(child => {
+                            expandedNodes.delete(child.name);
+                            if (isSearching) {
+                                manuallyExpandedDuringSearch.delete(child.name);
+                                manuallyCollapsedDuringSearch.add(child.name);
+                            }
+                            collapseDescendants(child);
+                        });
+                    }
+                };
+                
+                // Find and collapse the node's descendants in both trees
+                const findAndCollapse = (currentNode, targetName) => {
+                    if (currentNode.name === targetName) {
+                        collapseDescendants(currentNode);
+                        return true;
+                    }
+                    if (currentNode.children) {
+                        for (let child of currentNode.children) {
+                            if (findAndCollapse(child, targetName)) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                };
+                
+                if (sampleHierarchy) findAndCollapse(sampleHierarchy, nodeName);
+                if (window.anomalyHierarchy) findAndCollapse(window.anomalyHierarchy, nodeName);
             } else {
                 expandedNodes.add(nodeName);
-                // If searching, track manual expansion and remove from manually collapsed
-                if (currentSearchTerm.trim()) {
+                if (isSearching) {
                     manuallyExpandedDuringSearch.add(nodeName);
                     manuallyCollapsedDuringSearch.delete(nodeName);
                 }
@@ -1951,6 +2400,11 @@
             // Pass the toggled node name and flag to indicate this is a manual toggle
             // This ensures the toggle state is preserved even if there are visibility edge cases
             updateTree(currentSearchTerm, true, nodeName);
+            
+            // Also update anomaly tree if it exists
+            if (window.anomalyHierarchy) {
+                updateAnomalyTree(currentSearchTerm);
+            }
         }
 
         function updateTree(searchTerm = '', isManualToggle = false, toggledNodeName = null) {
@@ -1977,7 +2431,7 @@
             else if (isNowSearching && !wasSearching && expandedBeforeSearch.size === 0) {
                 expandedBeforeSearch = new Set(expandedNodes);
                 manuallyExpandedDuringSearch.clear(); // Clear any previous manual expansions
-                manuallyCollapsedDuringSearch.clear(); // Clear any previous manual collapses
+                // DO NOT clear manuallyCollapsedDuringSearch - preserve user's manual collapses across search changes
             }
             
             // Update previous search term
@@ -2003,84 +2457,38 @@
                     visibleNodes.add(sampleHierarchy.name);
                 }
                 
-                // Preserve current expansion state of visible nodes
-                // IMPORTANT: When called from manual toggle, preserve all current expandedNodes that are visible
-                // Only remove nodes that are no longer visible
-                const expandedToKeep = new Set();
-                expandedNodes.forEach(nodeName => {
-                    // Keep expansion state if node is visible
-                    if (visibleNodes.has(nodeName)) {
-                        expandedToKeep.add(nodeName);
-                    }
-                });
-                
-                // If this is a manual toggle and the toggled node is visible, ensure it's in the set
-                // This is critical: when expanding a node, toggleNode adds it to expandedNodes,
-                // but we need to ensure it's preserved in expandedToKeep even if there are any edge cases
-                // IMPORTANT: Only preserve if the node is actually in expandedNodes (i.e., we're expanding, not collapsing)
-                if (isManualToggle && toggledNodeName && visibleNodes.has(toggledNodeName) && expandedNodes.has(toggledNodeName)) {
-                    // Node is visible and was expanded - ensure it's in the set (it should already be if toggleNode added it)
-                    expandedToKeep.add(toggledNodeName);
-                } else if (isManualToggle && toggledNodeName && !expandedNodes.has(toggledNodeName)) {
-                    // Node was collapsed - ensure it's NOT in the set
-                    expandedToKeep.delete(toggledNodeName);
-                }
-                
-                // Set expandedNodes to preserved visible nodes (manually expanded + visible)
-                expandedNodes = expandedToKeep;
-                
-                // Track which nodes have matched children - only expand parents that have matches
-                const nodesWithMatchedChildren = new Set();
-                matches.forEach(matchedNode => {
-                    // Find the parent of this matched node
-                    const findParent = (currentNode, targetNode, parentNode = null) => {
-                        if (currentNode === targetNode) {
-                            if (parentNode) {
-                                nodesWithMatchedChildren.add(parentNode.name);
-                            }
-                            return true;
-                        }
-                        if (currentNode.children) {
-                            for (let child of currentNode.children) {
-                                if (findParent(child, targetNode, currentNode)) {
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
-                    };
-                    findParent(sampleHierarchy, matchedNode);
-                });
-                
-                // Reevaluate expanded nodes on every search change:
-                // 1. Keep manually expanded nodes (from before search or manually toggled during search)
-                // 2. Add nodes that currently have matched children (auto-expand for visibility)
-                // 3. Remove nodes that were auto-expanded but no longer have matches
+                // Build final expanded nodes set
                 const finalExpandedNodes = new Set();
                 
-                // Keep manually expanded nodes from before search started (if still visible)
+                // Track which nodes have matched children - auto-expand parents to show matches
+                const nodesWithMatchedChildren = new Set();
+                matches.forEach(matchedNode => {
+                    const parent = findParentNode(sampleHierarchy, matchedNode);
+                    if (parent) nodesWithMatchedChildren.add(parent.name);
+                });
+                
+                // 1. Keep manually expanded nodes from before search (if still visible)
                 expandedBeforeSearch.forEach(nodeName => {
                     if (visibleNodes.has(nodeName)) {
                         finalExpandedNodes.add(nodeName);
                     }
                 });
                 
-                // Keep nodes that were manually expanded during search (user clicked them)
+                // 2. Keep manually expanded nodes during search (make them visible)
                 manuallyExpandedDuringSearch.forEach(nodeName => {
-                    if (visibleNodes.has(nodeName)) {
-                        finalExpandedNodes.add(nodeName);
-                    }
+                    finalExpandedNodes.add(nodeName);
+                    findAndMarkNodeVisible(sampleHierarchy, nodeName, visibleNodes);
                 });
                 
-                // Add nodes that currently have matched children (auto-expand so matches are visible)
-                // BUT: exclude nodes that were manually collapsed by the user (manual action overrides auto-expansion)
-                // These will be collapsed automatically if they no longer have matches on next search change
+                // 3. Auto-expand nodes with matched children (unless manually collapsed)
                 nodesWithMatchedChildren.forEach(nodeName => {
-                    // Only auto-expand if the user hasn't manually collapsed this node
                     if (!manuallyCollapsedDuringSearch.has(nodeName)) {
                         finalExpandedNodes.add(nodeName);
                     }
                 });
+                
+                // 4. Remove manually collapsed nodes and their descendants
+                removeCollapsedAndDescendants(sampleHierarchy, manuallyCollapsedDuringSearch, finalExpandedNodes);
                 
                 expandedNodes = finalExpandedNodes;
 
@@ -2125,6 +2533,68 @@
             }
 
             return false;
+        }
+
+        // Shared helper: Find parent of a target node in a hierarchy
+        function findParentNode(currentNode, targetNode, parentNode = null) {
+            if (currentNode === targetNode) {
+                return parentNode;
+            }
+            if (currentNode.children) {
+                for (let child of currentNode.children) {
+                    const result = findParentNode(child, targetNode, currentNode);
+                    if (result !== null) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
+
+        // Shared helper: Find and mark a node and its path as visible
+        function findAndMarkNodeVisible(currentNode, targetName, visibleNodes, path = []) {
+            if (currentNode.name === targetName) {
+                // Mark this node and all ancestors as visible
+                path.forEach(ancestor => {
+                    visibleNodes.add(ancestor.name);
+                });
+                visibleNodes.add(targetName);
+                // Also mark all children as visible when manually expanded
+                if (currentNode.children) {
+                    currentNode.children.forEach(child => {
+                        visibleNodes.add(child.name);
+                    });
+                }
+                return true;
+            }
+            if (currentNode.children) {
+                for (let child of currentNode.children) {
+                    if (findAndMarkNodeVisible(child, targetName, visibleNodes, [...path, currentNode])) {
+                        visibleNodes.add(currentNode.name);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Shared helper: Remove collapsed nodes and their descendants from expanded set
+        function removeCollapsedAndDescendants(currentNode, collapsedSet, expandedSet) {
+            if (collapsedSet.has(currentNode.name)) {
+                // This node is collapsed, remove it and all its descendants
+                expandedSet.delete(currentNode.name);
+                if (currentNode.children) {
+                    currentNode.children.forEach(child => {
+                        expandedSet.delete(child.name);
+                        removeCollapsedAndDescendants(child, collapsedSet, expandedSet);
+                    });
+                }
+            } else if (currentNode.children) {
+                // Check children recursively
+                currentNode.children.forEach(child => {
+                    removeCollapsedAndDescendants(child, collapsedSet, expandedSet);
+                });
+            }
         }
 
         function expandAncestors(targetNode, currentNode, path = []) {
@@ -2613,6 +3083,7 @@
         searchBox.addEventListener('input', (e) => {
             const searchTerm = e.target.value;
             updateTree(searchTerm);
+            updateAnomalyTree(searchTerm);
         });
 
         // Initialize data on startup (data.js is loaded via script tag)

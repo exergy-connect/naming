@@ -1,5 +1,5 @@
 name: "Physics Theory Model"
-version: "26.02.12.1"
+version: "26.02.12.3"
 author: "Exergy ∞ LLC"
 
 entities:
@@ -71,6 +71,14 @@ entities:
         item_type:
           entity: prediction
         description: "List of testable predictions made by this theory (nested children)"
+      - name: anomalies
+        type: array
+        required: false
+        item_type: string
+        foreignKey:
+          entity: anomaly
+          field: anomaly_id
+        description: "Array of anomaly IDs that challenge or are explained by this theory"
       - name: papers
         type: array
         required: false
