@@ -760,7 +760,7 @@
         </div>
 
         <div class="copyright">
-            © 2026 Exergy ∞ LLC | Version 2026-02-10.1 | <a href="index_v1.html" style="color: rgba(120, 119, 198, 0.8); text-decoration: none;">v1</a>
+            © 2026 Exergy ∞ LLC | Version 2026-02-10.1
         </div>
     </div>
 
@@ -784,134 +784,10 @@
         </div>
     </div>
 
-    <script src="output/consolidated_data.js"></script>
+    <script src="data.js?v=2026-02-10.1"></script>
     <script>
         // Global variable to hold the loaded hierarchy data
         let sampleHierarchy = null;
-
-        // Convert consolidated data format to hierarchical format expected by UI
-        function convertConsolidatedDataToHierarchy(consolidatedData) {
-            if (!consolidatedData || !consolidatedData.data || !consolidatedData.data.theory) {
-                console.error('Invalid consolidated data format');
-                return null;
-            }
-
-            const theories = consolidatedData.data.theory;
-            
-            // Build a map of theory_id -> theory object
-            const theoryMap = new Map();
-            Object.values(theories).forEach(theory => {
-                theoryMap.set(theory.theory_id, theory);
-            });
-
-            // Group theories by category
-            const theoriesByCategory = {};
-            Object.values(theories).forEach(theory => {
-                if (!theory.parent_theory_id) { // Top-level theories (no parent)
-                    const category = theory.category || 'Other';
-                    if (!theoriesByCategory[category]) {
-                        theoriesByCategory[category] = [];
-                    }
-                    theoriesByCategory[category].push(theory);
-                }
-            });
-
-            // Build hierarchical structure
-            function buildHierarchy(theory) {
-                const node = {
-                    name: theory.name,
-                    year: theory.year,
-                    summary: theory.summary,
-                    people: theory.people || [],
-                    tags: theory.tags || [],
-                    papers: theory.papers || [],
-                    nobel: theory.nobel_year,
-                    children: []
-                };
-
-                // Find children (theories with this theory as parent)
-                Object.values(theories).forEach(childTheory => {
-                    if (childTheory.parent_theory_id === theory.theory_id) {
-                        node.children.push(buildHierarchy(childTheory));
-                    }
-                });
-
-                // Add nested assumptions, postulates, and claims as children
-                if (theory.assumptions && theory.assumptions.length > 0) {
-                    theory.assumptions.forEach(assumption => {
-                        node.children.push({
-                            name: `Assumption: ${assumption.statement.substring(0, 50)}...`,
-                            year: theory.year,
-                            summary: assumption.statement,
-                            rationale: assumption.rationale
-                        });
-                    });
-                }
-
-                if (theory.postulates && theory.postulates.length > 0) {
-                    theory.postulates.forEach(postulate => {
-                        node.children.push({
-                            name: `Postulate: ${postulate.statement.substring(0, 50)}...`,
-                            year: postulate.formulation_year || theory.year,
-                            summary: postulate.statement
-                        });
-                    });
-                }
-
-                if (theory.claims && theory.claims.length > 0) {
-                    theory.claims.forEach(claim => {
-                        node.children.push({
-                            name: `Claim: ${claim.statement.substring(0, 50)}...`,
-                            year: claim.verification_year || theory.year,
-                            summary: claim.statement,
-                            status: claim.status
-                        });
-                    });
-                }
-
-                // Sort children by year
-                node.children.sort((a, b) => (a.year || 0) - (b.year || 0));
-
-                return node;
-            }
-
-            // Build root structure with categories
-            const rootChildren = [];
-            const categoryOrder = ['Classical Mechanics', 'Quantum Physics', 'Relativity', 'Thermodynamics', 'Electromagnetism', 'Particle Physics'];
-            
-            categoryOrder.forEach(category => {
-                if (theoriesByCategory[category] && theoriesByCategory[category].length > 0) {
-                    const categoryNode = {
-                        name: category,
-                        year: Math.min(...theoriesByCategory[category].map(t => t.year || 0)),
-                        children: theoriesByCategory[category]
-                            .sort((a, b) => (a.year || 0) - (b.year || 0))
-                            .map(theory => buildHierarchy(theory))
-                    };
-                    rootChildren.push(categoryNode);
-                }
-            });
-
-            // Add any uncategorized theories
-            Object.keys(theoriesByCategory).forEach(category => {
-                if (!categoryOrder.includes(category)) {
-                    const categoryNode = {
-                        name: category,
-                        year: Math.min(...theoriesByCategory[category].map(t => t.year || 0)),
-                        children: theoriesByCategory[category]
-                            .sort((a, b) => (a.year || 0) - (b.year || 0))
-                            .map(theory => buildHierarchy(theory))
-                    };
-                    rootChildren.push(categoryNode);
-                }
-            });
-
-            return {
-                name: "Physics as known today",
-                year: 2026,
-                children: rootChildren
-            };
-        }
 
         // Trie Node class
         class TrieNode {
@@ -1164,26 +1040,17 @@
             }
         }
 
-        // Initialize data from script-loaded consolidated_data.js
+        // Initialize data from script-loaded data.js
         function initializeData() {
-            if (typeof consolidatedData === 'undefined') {
-                console.error('consolidatedData is not defined. Make sure output/consolidated_data.js is loaded.');
+            if (typeof physicsData === 'undefined') {
+                console.error('physicsData is not defined. Make sure data.js is loaded.');
                 document.getElementById('treeRoot').innerHTML = 
-                    '<div class="no-results">Error: consolidated_data.js not loaded. Please ensure output/consolidated_data.js is available.</div>';
+                    '<div class="no-results">Error: data.js not loaded. Please ensure data.js is available.</div>';
                 return;
             }
 
-            // Convert consolidated data format to hierarchical format
-            const hierarchy = convertConsolidatedDataToHierarchy(consolidatedData);
-            if (!hierarchy) {
-                console.error('Failed to convert consolidated data to hierarchy');
-                document.getElementById('treeRoot').innerHTML = 
-                    '<div class="no-results">Error: Failed to process consolidated data.</div>';
-                return;
-            }
-
-            // Use the converted hierarchical data
-            sampleHierarchy = hierarchy;
+            // Use the original data directly
+            sampleHierarchy = physicsData;
             
             // Set parent years to minimum of children (except root which stays at 2026)
             setParentYears(sampleHierarchy, true);
