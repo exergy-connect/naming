@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -209,6 +209,63 @@
             .header {
                 padding: 15px 10px;
                 font-size: 0.9em;
+            }
+        }
+
+        /* Landscape orientation fixes for mobile devices */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                height: calc(100vh - 10px);
+            }
+
+            .header {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+
+            .tabs-container {
+                padding: 0 8px;
+                gap: 4px;
+            }
+
+            .tab {
+                padding: 6px 10px;
+                font-size: 0.75em;
+            }
+
+            .search-container {
+                padding: 10px 15px;
+            }
+
+            .search-box {
+                padding: 10px 15px;
+                font-size: 0.95em;
+            }
+
+            .split-container {
+                padding: 10px;
+                gap: 8px;
+                min-height: 0;
+                flex: 1 1 auto;
+            }
+
+            .tree-container {
+                min-height: 0;
+                flex: 1 1 auto;
+            }
+
+            .tree-container-header {
+                font-size: 0.9em;
+                margin-bottom: 8px;
+                padding-bottom: 6px;
+            }
+
+            .tree {
+                min-height: 0;
             }
         }
 
