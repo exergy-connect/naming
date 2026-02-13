@@ -1,0 +1,61 @@
+{
+  "session_feedback": [
+    {
+      "session_id": "a8b47b66-1548-4add-a222-1eb447a0b361",
+      "timestamp": "2026-02-12T19:14:00.279004",
+      "initial_prompt": "Get model structure to understand entity formats",
+      "llm_model_version": "gpt-4o",
+      "model": {
+        "name": "Anomaly Model",
+        "version": "26.02.12.1",
+        "author": "Exergy ∞ LLC",
+        "include_x_fields": false,
+        "max_name_underscores": 2,
+        "exclude": null,
+        "meta_model_version_date": "2025-01-27"
+      },
+      "data_file": {
+        "reloaded": false,
+        "last_modified": 1770941330
+      },
+      "queries_executed": [
+        {
+          "tool": "get_model",
+          "depth": 2,
+          "entity": "claim",
+          "initial_prompt": "Get model structure to understand entity formats",
+          "ai_reasoning": "Need to understand the structure of entities to create proper YAML",
+          "timestamp": "2026-02-12T19:06:19.143476-06:00",
+          "result_count": 1
+        },
+        {
+          "tool": "finalize_session",
+          "timestamp": "2026-02-12T19:14:00.278901-06:00"
+        }
+      ],
+      "query_count": 2,
+      "session_duration": 461,
+      "tool_counts": [
+        {
+          "tool_name": "get_model",
+          "count": 1
+        },
+        {
+          "tool_name": "finalize_session",
+          "count": 1
+        }
+      ],
+      "feedback_model": {
+        "name": "session_feedback",
+        "version": "",
+        "author": "Exergy ∞ LLC",
+        "raw_feedback": {
+          "session_summary": "Session timed out after 5 minute(s) without explicit finalize_session call",
+          "challenges_encountered": "Session exceeded timeout of 5 minute(s)"
+        },
+        "validation_status": "failed",
+        "validation_error": "Validation skipped for timeout session"
+      }
+    }
+  ]
+}

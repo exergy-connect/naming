@@ -8,9 +8,6 @@
     "exclude": null
   },
   "data": {
-    "assumption": {},
-    "postulate": {},
-    "claim": {},
     "theory": {
       "action-principle": {
         "theory_id": "action-principle",
@@ -23,9 +20,6 @@
           "pierre-maupertuis"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -49,9 +43,6 @@
           "william-hamilton"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -76,9 +67,6 @@
           "albert-einstein"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -117,9 +105,6 @@
           "isaac-newton"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -198,9 +183,6 @@
           "james-joule"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -233,9 +215,6 @@
           "rene-descartes"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -272,9 +251,6 @@
           "bianchi-identity"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "claims": [
           {
@@ -312,9 +288,6 @@
           "force"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -359,9 +332,6 @@
           "feynman-1949-space-time"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -376,6 +346,22 @@
           {
             "claim_id": "fd-claim-1",
             "statement": "Feynman diagrams simplify calculations of quantum field theory amplitudes",
+            "status": "verified",
+            "verification_year": 1949,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "claim_id": "fd-claim-2",
+            "statement": "The simplification results from combining processes that were previously unnecessarily separated, such as processes involving virtual pairs with those involving only positive energy electrons",
+            "status": "verified",
+            "verification_year": 1949,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "claim_id": "fd-claim-3",
+            "statement": "The space-time approach permits matrix elements to be written down directly for any specific problem without requiring the complicated machinery of Hamiltonian electrodynamics",
             "status": "verified",
             "verification_year": 1949,
             "c": 1,
@@ -403,9 +389,6 @@
           "time"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -447,9 +430,6 @@
           "gravity"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -551,9 +531,6 @@
           "william-hamilton"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -576,9 +553,6 @@
           "joseph-lagrange"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -604,9 +578,6 @@
           "time"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -643,9 +614,6 @@
           "time"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -688,9 +656,6 @@
           "newton-principia"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -752,9 +717,6 @@
           "force"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -780,9 +742,6 @@
           "noether-invariante"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -829,9 +788,6 @@
           "time"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -884,9 +840,6 @@
           "feynman-1982-simulating"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -929,9 +882,6 @@
           "force"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -945,6 +895,20 @@
             "assumption_id": "qed-assumption-2",
             "statement": "Spacetime uses Minkowski (hyperbolic) geometry",
             "rationale": "QED operates in flat Minkowski spacetime consistent with special relativity",
+            "c": 1,
+            "v": 1
+          },
+          {
+            "assumption_id": "qed-assumption-3",
+            "statement": "The interaction between charges can be modified at short distances to make divergent integrals finite",
+            "rationale": "This modification allows systematic removal of infinities through renormalization",
+            "c": 1,
+            "v": 1
+          },
+          {
+            "assumption_id": "qed-assumption-4",
+            "statement": "Observable phenomena are insensitive to the details of the short-distance modification (except at extreme energies)",
+            "rationale": "This allows taking the limit as the cut-off goes to zero for observable processes",
             "c": 1,
             "v": 1
           }
@@ -965,6 +929,30 @@
             "verification_year": 1949,
             "c": 1,
             "v": 1
+          },
+          {
+            "claim_id": "qed-claim-3",
+            "statement": "Matrix elements for complex processes in electrodynamics can be written down directly using a space-time approach, providing considerable simplification over conventional methods",
+            "status": "verified",
+            "verification_year": 1949,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "claim_id": "qed-claim-4",
+            "statement": "The space-time view makes relativistic invariance self-evident, in contrast to the Hamiltonian method which obscures it",
+            "status": "verified",
+            "verification_year": 1949,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "claim_id": "qed-claim-5",
+            "statement": "Each term in the expansion in powers of e²/ℏc can be written down and understood directly from a physical point of view",
+            "status": "verified",
+            "verification_year": 1949,
+            "c": 1,
+            "v": 1
           }
         ],
         "postulates": [
@@ -972,6 +960,20 @@
             "postulate_id": "qed-postulate-1",
             "statement": "The interaction between charged particles and photons is described by the QED Lagrangian",
             "formulation_year": 1948,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "postulate_id": "qed-postulate-2",
+            "statement": "Electrodynamics can be described as a direct interaction at a distance (albeit delayed in time) between charges, rather than through field oscillators",
+            "formulation_year": 1949,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "postulate_id": "qed-postulate-3",
+            "statement": "The interaction viewpoint is best for virtual quanta, while the field viewpoint is best for real quanta",
+            "formulation_year": 1949,
             "c": 1,
             "v": 1
           }
@@ -988,9 +990,6 @@
           "richard-feynman"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -1039,9 +1038,6 @@
           "albert-einstein"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -1064,9 +1060,6 @@
           "albert-einstein"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -1108,9 +1101,6 @@
           "feynman-1949-space-time"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -1127,6 +1117,30 @@
             "statement": "Renormalization makes QED predictions finite and accurate",
             "status": "verified",
             "verification_year": 1947,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "claim_id": "ren-claim-2",
+            "statement": "By modifying the interaction of electrons at short distances, all matrix elements become finite except those relating to vacuum polarization",
+            "status": "verified",
+            "verification_year": 1949,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "claim_id": "ren-claim-3",
+            "statement": "The only effects sensitive to the modification are changes in mass and charge of electrons, which cannot be directly observed",
+            "status": "verified",
+            "verification_year": 1949,
+            "c": 1,
+            "v": 1
+          },
+          {
+            "claim_id": "ren-claim-4",
+            "statement": "Phenomena directly observable are insensitive to the details of the modification used (except at extreme energies), allowing a limit to be taken as the range of modification goes to zero",
+            "status": "verified",
+            "verification_year": 1949,
             "c": 1,
             "v": 1
           }
@@ -1147,9 +1161,6 @@
           "ricci-1904-absolute-calculus"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "claims": [
           {
@@ -1175,9 +1186,6 @@
           "riemann-1854-geometry"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -1216,9 +1224,6 @@
           "time"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -1328,9 +1333,6 @@
           "time"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -1366,9 +1368,6 @@
           "force"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "assumptions": [
           {
@@ -1491,6 +1490,19 @@
         "name": "Gregorio Ricci-Curbastro",
         "birth_year": 1853,
         "death_year": 1925,
+        "c": 1,
+        "v": 1
+      },
+      "hans-bethe": {
+        "person_id": "hans-bethe",
+        "name": "Hans Bethe",
+        "birth_year": 1906,
+        "death_year": 2005,
+        "sources": [
+          "referenced by paper feynman-1949-space-time",
+          "mentioned for suggesting methods for vacuum polarization",
+          "acknowledged in paper for discussions and manuscript critiques"
+        ],
         "c": 1,
         "v": 1
       },
@@ -1744,6 +1756,18 @@
         "c": 1,
         "v": 1
       },
+      "victor-weisskopf": {
+        "person_id": "victor-weisskopf",
+        "name": "Victor Weisskopf",
+        "birth_year": 1908,
+        "death_year": 2002,
+        "sources": [
+          "referenced by paper feynman-1949-space-time",
+          "mentioned with Pauli for second quantization treatment"
+        ],
+        "c": 1,
+        "v": 1
+      },
       "werner-heisenberg": {
         "person_id": "werner-heisenberg",
         "name": "Werner Heisenberg",
@@ -1765,6 +1789,19 @@
         "name": "William Rowan Hamilton",
         "birth_year": 1805,
         "death_year": 1865,
+        "c": 1,
+        "v": 1
+      },
+      "wolfgang-pauli": {
+        "person_id": "wolfgang-pauli",
+        "name": "Wolfgang Pauli",
+        "birth_year": 1900,
+        "death_year": 1958,
+        "sources": [
+          "referenced by paper feynman-1949-space-time",
+          "mentioned for suggesting methods for vacuum polarization and gauge invariance",
+          "mentioned with Bethe for calculation methods"
+        ],
         "c": 1,
         "v": 1
       },
@@ -1956,7 +1993,6 @@
         "v": 1
       }
     },
-    "violated_assumption": {},
     "anomaly": {
       "cosmic-blueshift": {
         "anomaly_id": "cosmic-blueshift",
@@ -1971,9 +2007,6 @@
         "people": [],
         "papers": [],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "violated_assumptions": [
           {
@@ -1997,9 +2030,6 @@
         "people": [],
         "papers": [],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "violated_assumptions": [
           {
@@ -2029,9 +2059,6 @@
           "einstein-1915-field-equations"
         ],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "violated_assumptions": [
           {
@@ -2059,9 +2086,6 @@
         ],
         "papers": [],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "violated_assumptions": [
           {
@@ -2084,9 +2108,6 @@
         "people": [],
         "papers": [],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "violated_assumptions": [
           {
@@ -2112,9 +2133,6 @@
         ],
         "papers": [],
         "c": 1,
-        "m": [
-          1
-        ],
         "v": 1,
         "violated_assumptions": [
           {
@@ -2127,7 +2145,6 @@
         ]
       }
     },
-    "prediction": {},
     "prize": {
       "kyoto-basic-sciences": {
         "prize_id": "kyoto-basic-sciences",
