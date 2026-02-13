@@ -176,6 +176,27 @@
                 min-width: auto;
             }
 
+            /* Show anomalies tab only on mobile */
+            .tab.mobile-only {
+                display: block;
+            }
+
+            /* Hide right tree container (anomalies) on mobile - show as tab instead */
+            .tree-container.right {
+                display: none;
+            }
+
+            /* Make left tree container full width on mobile */
+            .split-container {
+                flex-direction: column;
+            }
+
+            .tree-container.left {
+                width: 100%;
+                border-right: none;
+                padding-right: 0;
+            }
+
             body {
                 padding: 10px;
             }
@@ -191,6 +212,11 @@
             .search-container {
                 padding: 15px;
             }
+        }
+
+        /* Hide anomalies tab on desktop */
+        .tab.mobile-only {
+            display: none;
         }
 
         /* iPhone specific portrait orientation */
@@ -251,6 +277,17 @@
                 gap: 8px;
                 min-height: 0;
                 flex: 1 1 auto;
+                flex-direction: column;
+            }
+
+            .tree-container.right {
+                display: none;
+            }
+
+            .tree-container.left {
+                width: 100%;
+                border-right: none;
+                padding-right: 0;
             }
 
             .tree-container {
@@ -919,6 +956,7 @@
             <div class="tab" data-view="people">People</div>
             <div class="tab" data-view="tags">Tags</div>
             <div class="tab" data-view="papers">Papers</div>
+            <div class="tab mobile-only" data-view="anomalies">Anomalies</div>
         </div>
         
         <div class="search-container">
@@ -985,7 +1023,7 @@
     <script>
         // Global variable to hold the loaded hierarchy data
         let sampleHierarchy = null;
-        let currentView = 'concepts'; // 'concepts', 'people', 'tags', 'papers'
+        let currentView = 'concepts'; // 'concepts', 'people', 'tags', 'papers', 'anomalies'
         let consolidatedDataGlobal = null; // Store consolidated data for view switching
         
         // Load consolidated data asynchronously
@@ -1488,6 +1526,8 @@
                     return convertToTagsView(consolidatedData);
                 case 'papers':
                     return convertToPapersView(consolidatedData);
+                case 'anomalies':
+                    return buildAnomalyHierarchy(consolidatedData);
                 default:
                     return convertConsolidatedDataToHierarchy(consolidatedData);
             }
@@ -1837,7 +1877,8 @@
                 'concepts': 'Enter search criteria...',
                 'people': 'Search people...',
                 'tags': 'Search tags...',
-                'papers': 'Search papers...'
+                'papers': 'Search papers...',
+                'anomalies': 'Search anomalies...'
             };
             searchBox.placeholder = placeholders[view] || 'Enter search criteria...';
             
