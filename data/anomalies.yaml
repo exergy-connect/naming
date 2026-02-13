@@ -68,7 +68,7 @@ anomaly:
     papers: []
 
   - anomaly_id: "pioneer-anomaly"
-    name: "Pioneer Anomaly"
+    name: "Pioneer anomaly"
     description: |
       The Pioneer 10 and Pioneer 11 spacecraft exhibited an unexplained constant acceleration
       towards the Sun of approximately 8.74 × 10⁻¹⁰ m/s². This anomalous acceleration was
