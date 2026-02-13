@@ -1,0 +1,199 @@
+{
+  "session_feedback": [
+    {
+      "session_id": "baf9bc35-1fd4-4167-9158-41fa33bf2552",
+      "timestamp": "2026-02-13T16:50:51.425154",
+      "initial_prompt": "For each documented anomaly, explain which theories or assumptions are being violated",
+      "llm_model_version": "gpt-4o",
+      "model": {
+        "name": "Anomaly Model",
+        "version": "26.02.12.1",
+        "author": "Exergy ∞ LLC",
+        "include_x_fields": false,
+        "max_name_underscores": 2,
+        "exclude": null,
+        "meta_model_version_date": "2025-01-27"
+      },
+      "data_file": {
+        "reloaded": false,
+        "last_modified": 1771020625
+      },
+      "queries_executed": [
+        {
+          "tool": "get_model",
+          "depth": 0,
+          "initial_prompt": "For each documented anomaly, explain which theories or assumptions are being violated",
+          "ai_reasoning": "Need to understand the data model structure for anomalies, theories, and assumptions to identify violations",
+          "timestamp": "2026-02-13T16:44:19.299078-06:00",
+          "result_count": 24
+        },
+        {
+          "tool": "get_entity",
+          "entity": "anomaly",
+          "depth": 3,
+          "updated_prompt": "For each documented anomaly, explain which theories or assumptions are being violated",
+          "ai_reasoning": "Getting all anomalies with full details including violated assumptions and claims",
+          "timestamp": "2026-02-13T16:44:22.378479-06:00",
+          "result_count": 6
+        },
+        {
+          "tool": "get_entity",
+          "entity": "violated_assumption",
+          "depth": 3,
+          "updated_prompt": "For each documented anomaly, explain which theories or assumptions are being violated",
+          "ai_reasoning": "Getting all violated assumption records to understand which assumptions are violated by each anomaly",
+          "timestamp": "2026-02-13T16:44:23.284539-06:00"
+        },
+        {
+          "tool": "get_entity",
+          "entity": "theory",
+          "depth": 1,
+          "updated_prompt": "For each documented anomaly, explain which theories or assumptions are being violated",
+          "ai_reasoning": "Getting theories to understand which theories are being violated by anomalies",
+          "timestamp": "2026-02-13T16:44:23.660949-06:00",
+          "result_count": 32
+        },
+        {
+          "tool": "get_entity",
+          "entity": "assumption",
+          "depth": 2,
+          "updated_prompt": "For each documented anomaly, explain which theories or assumptions are being violated",
+          "ai_reasoning": "Getting assumptions to understand what assumptions are being violated",
+          "timestamp": "2026-02-13T16:44:24.417362-06:00"
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "anomaly.*.{\n  anomaly_id: anomaly_id,\n  name: name,\n  theory_id: theory_id,\n  violated_assumptions: violated_assumptions.*.{\n    assumption_id: assumption_id,\n    violation_description: violation_description\n  },\n  violated_claims: violated_claims\n}",
+          "updated_prompt": "For each documented anomaly, explain which theories or assumptions are being violated",
+          "ai_reasoning": "Getting all anomalies with their violated assumptions and claims to understand what is being violated",
+          "timestamp": "2026-02-13T16:44:28.096162-06:00",
+          "result_count": 6
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "theory.*.{\n  theory_id: theory_id,\n  name: name,\n  assumptions: assumptions.*.{\n    assumption_id: assumption_id,\n    statement: statement\n  },\n  claims: claims.*.{\n    claim_id: claim_id,\n    statement: statement\n  }\n}",
+          "updated_prompt": "For each documented anomaly, explain which theories or assumptions are being violated",
+          "ai_reasoning": "Getting all theories with their assumptions and claims to match against violated items",
+          "timestamp": "2026-02-13T16:44:28.825058-06:00",
+          "result_count": 32
+        },
+        {
+          "tool": "finalize_session",
+          "timestamp": "2026-02-13T16:44:35.901855-06:00"
+        },
+        {
+          "tool": "get_model",
+          "depth": 0,
+          "initial_prompt": "What GR claims does the pioneer anomaly violate?",
+          "ai_reasoning": "Need to check the Pioneer anomaly data and GR claims to identify violations",
+          "timestamp": "2026-02-13T16:48:44.111526-06:00",
+          "result_count": 24
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "anomaly['pioneer-anomaly']",
+          "updated_prompt": "What GR claims does the pioneer anomaly violate?",
+          "ai_reasoning": "Getting the Pioneer anomaly details to see which GR claims it violates",
+          "timestamp": "2026-02-13T16:48:44.549733-06:00"
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "theory['general-relativity'].claims.*.{\n  claim_id: claim_id,\n  statement: statement,\n  status: status\n}",
+          "updated_prompt": "What GR claims does the pioneer anomaly violate?",
+          "ai_reasoning": "Getting all General Relativity claims to see which ones the Pioneer anomaly might violate",
+          "timestamp": "2026-02-13T16:48:45.095296-06:00"
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "anomaly.* | [?anomaly_id == 'pioneer-anomaly']",
+          "updated_prompt": "What GR claims does the pioneer anomaly violate?",
+          "ai_reasoning": "Getting the Pioneer anomaly to see which GR claims it violates",
+          "timestamp": "2026-02-13T16:48:46.308719-06:00",
+          "result_count": 1
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "theory.* | [?theory_id == 'general-relativity'] | [0].claims.*.{\n  claim_id: claim_id,\n  statement: statement,\n  status: status\n}",
+          "updated_prompt": "What GR claims does the pioneer anomaly violate?",
+          "ai_reasoning": "Getting all General Relativity claims to identify which ones the Pioneer anomaly might violate",
+          "timestamp": "2026-02-13T16:48:46.894801-06:00"
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "theory.* | [?theory_id == 'general-relativity']",
+          "updated_prompt": "What GR claims does the pioneer anomaly violate?",
+          "ai_reasoning": "Getting the General Relativity theory with all its claims",
+          "timestamp": "2026-02-13T16:48:48.145048-06:00",
+          "result_count": 1
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "theory.* | [?theory_id == 'general-relativity'] | [0].papers",
+          "updated_prompt": "What papers describe GR",
+          "ai_reasoning": "Getting the paper IDs associated with General Relativity theory",
+          "timestamp": "2026-02-13T16:49:40.903549-06:00",
+          "result_count": 2
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "paper.* | [?paper_id == 'einstein-1915-field-equations' || paper_id == 'einstein-1915-foundation']",
+          "updated_prompt": "What papers describe GR",
+          "ai_reasoning": "Getting the full details of papers that describe General Relativity",
+          "timestamp": "2026-02-13T16:49:41.328536-06:00",
+          "result_count": 2
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "theory.* | [?parent_theory_id == 'general-relativity'].papers[]",
+          "updated_prompt": "What papers describe GR",
+          "ai_reasoning": "Finding papers associated with child theories of General Relativity",
+          "timestamp": "2026-02-13T16:49:42.736650-06:00",
+          "result_count": 5
+        },
+        {
+          "tool": "jmespath_query",
+          "query": "paper.*",
+          "updated_prompt": "What papers describe GR",
+          "ai_reasoning": "Getting all papers to see if there are other GR-related papers",
+          "timestamp": "2026-02-13T16:49:43.110547-06:00",
+          "result_count": 14
+        },
+        {
+          "tool": "finalize_session",
+          "timestamp": "2026-02-13T16:50:51.425034-06:00"
+        }
+      ],
+      "query_count": 19,
+      "session_duration": 392,
+      "tool_counts": [
+        {
+          "tool_name": "get_model",
+          "count": 2
+        },
+        {
+          "tool_name": "get_entity",
+          "count": 4
+        },
+        {
+          "tool_name": "jmespath_query",
+          "count": 11
+        },
+        {
+          "tool_name": "finalize_session",
+          "count": 2
+        }
+      ],
+      "feedback_model": {
+        "name": "session_feedback",
+        "version": "",
+        "author": "Exergy ∞ LLC",
+        "raw_feedback": {
+          "session_summary": "Session timed out after 5 minute(s) without explicit finalize_session call",
+          "challenges_encountered": "Session exceeded timeout of 5 minute(s)"
+        },
+        "validation_status": "failed",
+        "validation_error": "Validation skipped for timeout session"
+      }
+    }
+  ]
+}

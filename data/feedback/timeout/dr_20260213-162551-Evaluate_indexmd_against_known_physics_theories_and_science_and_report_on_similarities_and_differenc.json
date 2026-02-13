@@ -1,0 +1,60 @@
+{
+  "session_feedback": [
+    {
+      "session_id": "9ff41aad-1109-45bc-8f5f-3b3cb75829b4",
+      "timestamp": "2026-02-13T16:25:51.064757",
+      "initial_prompt": "Evaluate index.md against known physics theories and science, and report on similarities and differences",
+      "llm_model_version": "gpt-4o",
+      "model": {
+        "name": "Anomaly Model",
+        "version": "26.02.12.1",
+        "author": "Exergy ∞ LLC",
+        "include_x_fields": false,
+        "max_name_underscores": 2,
+        "exclude": null,
+        "meta_model_version_date": "2025-01-27"
+      },
+      "data_file": {
+        "reloaded": false,
+        "last_modified": 1771020625
+      },
+      "queries_executed": [
+        {
+          "tool": "get_model",
+          "depth": 0,
+          "initial_prompt": "Evaluate index.md against known physics theories and science, and report on similarities and differences",
+          "ai_reasoning": "I need to understand the physics model structure to compare the content of index.md against known theories.",
+          "timestamp": "2026-02-13T16:17:51.811244-06:00",
+          "result_count": 24
+        },
+        {
+          "tool": "finalize_session",
+          "timestamp": "2026-02-13T16:25:51.064681-06:00"
+        }
+      ],
+      "query_count": 2,
+      "session_duration": 479,
+      "tool_counts": [
+        {
+          "tool_name": "get_model",
+          "count": 1
+        },
+        {
+          "tool_name": "finalize_session",
+          "count": 1
+        }
+      ],
+      "feedback_model": {
+        "name": "session_feedback",
+        "version": "",
+        "author": "Exergy ∞ LLC",
+        "raw_feedback": {
+          "session_summary": "Session timed out after 5 minute(s) without explicit finalize_session call",
+          "challenges_encountered": "Session exceeded timeout of 5 minute(s)"
+        },
+        "validation_status": "failed",
+        "validation_error": "Validation skipped for timeout session"
+      }
+    }
+  ]
+}
