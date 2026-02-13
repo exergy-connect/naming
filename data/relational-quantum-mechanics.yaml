@@ -1,0 +1,43 @@
+# Relational Quantum Mechanics Data
+# This file represents Relational Quantum Mechanics theory proposed by Carlo Rovelli
+# Created from session: a8eba5da-5965-4167-80bc-cc903018a424
+
+theory:
+  - theory_id: "relational-quantum-mechanics"
+    name: "Relational Quantum Mechanics"
+    year: 1996
+    summary: "Interpretation of quantum mechanics that states quantum states are relative to observers, not absolute. Proposes that there is no absolute state of a system, only states relative to other systems. Resolves the measurement problem by eliminating the need for wave function collapse."
+    category: "Quantum Physics"
+    parent_theory_id: "quantum-field-theory"
+    people:
+      - "carlo-rovelli"
+    papers:
+      - "rovelli-1996-relational"
+    assumptions:
+      - assumption_id: "rqm-assumption-1"
+        statement: "Quantum states are relative to observers, not absolute"
+        rationale: "There is no absolute state of a system; states only exist relative to other systems (observers)"
+      - assumption_id: "rqm-assumption-2"
+        statement: "All systems are equivalent as observers"
+        rationale: "Any physical system can serve as an observer; there is no fundamental distinction between observer and observed"
+    postulates:
+      - postulate_id: "rqm-postulate-1"
+        statement: "The state of a system is only defined relative to another system (observer)"
+        formulation_year: 1996
+    claims:
+      - claim_id: "rqm-claim-1"
+        statement: "Relational Quantum Mechanics resolves the measurement problem without requiring wave function collapse"
+        status: "theoretical"
+
+person:
+  - person_id: "carlo-rovelli"
+    name: "Carlo Rovelli"
+    birth_year: 1956
+
+paper:
+  - paper_id: "rovelli-1996-relational"
+    title: "Relational Quantum Mechanics"
+    year: 1996
+    link: "https://arxiv.org/abs/quant-ph/9609002"
+    authors:
+      - "carlo-rovelli"

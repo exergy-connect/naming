@@ -1093,6 +1093,56 @@
           }
         ]
       },
+      "relational-quantum-mechanics": {
+        "theory_id": "relational-quantum-mechanics",
+        "name": "Relational Quantum Mechanics",
+        "year": 1996,
+        "summary": "Interpretation of quantum mechanics that states quantum states are relative to observers, not absolute. Proposes that there is no absolute state of a system, only states relative to other systems. Resolves the measurement problem by eliminating the need for wave function collapse.",
+        "category": "Quantum Physics",
+        "parent_theory_id": "quantum-field-theory",
+        "people": [
+          "carlo-rovelli"
+        ],
+        "papers": [
+          "rovelli-1996-relational"
+        ],
+        "c": 1,
+        "v": 1,
+        "assumptions": [
+          {
+            "assumption_id": "rqm-assumption-1",
+            "statement": "Quantum states are relative to observers, not absolute",
+            "rationale": "There is no absolute state of a system; states only exist relative to other systems (observers)",
+            "c": 1,
+            "v": 1
+          },
+          {
+            "assumption_id": "rqm-assumption-2",
+            "statement": "All systems are equivalent as observers",
+            "rationale": "Any physical system can serve as an observer; there is no fundamental distinction between observer and observed",
+            "c": 1,
+            "v": 1
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "rqm-claim-1",
+            "statement": "Relational Quantum Mechanics resolves the measurement problem without requiring wave function collapse",
+            "status": "theoretical",
+            "c": 1,
+            "v": 1
+          }
+        ],
+        "postulates": [
+          {
+            "postulate_id": "rqm-postulate-1",
+            "statement": "The state of a system is only defined relative to another system (observer)",
+            "formulation_year": 1996,
+            "c": 1,
+            "v": 1
+          }
+        ]
+      },
       "relativistic-dynamics": {
         "theory_id": "relativistic-dynamics",
         "name": "Relativistic Dynamics",
@@ -1532,6 +1582,13 @@
         "name": "Bernhard Riemann",
         "birth_year": 1826,
         "death_year": 1866,
+        "c": 1,
+        "v": 1
+      },
+      "carlo-rovelli": {
+        "person_id": "carlo-rovelli",
+        "name": "Carlo Rovelli",
+        "birth_year": 1956,
         "c": 1,
         "v": 1
       },
@@ -2048,6 +2105,17 @@
         "link": "https://en.wikipedia.org/wiki/Riemann_curvature_tensor",
         "authors": [
           "bernhard-riemann"
+        ],
+        "c": 1,
+        "v": 1
+      },
+      "rovelli-1996-relational": {
+        "paper_id": "rovelli-1996-relational",
+        "title": "Relational Quantum Mechanics",
+        "year": 1996,
+        "link": "https://arxiv.org/abs/quant-ph/9609002",
+        "authors": [
+          "carlo-rovelli"
         ],
         "c": 1,
         "v": 1
