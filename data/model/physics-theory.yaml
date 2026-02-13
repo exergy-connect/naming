@@ -357,6 +357,11 @@ entities:
         required: false
         item_type: integer
         description: "Array of years when this person received Nobel Prizes"
+      - name: sources
+        type: array
+        required: false
+        item_type: string
+        description: "Array of source descriptions tracking why this person was added to the database (e.g., 'referenced by paper feynman-1949-space-time', 'author of paper einstein-1905-relativity')"
 
   - name: tag
     brief: "A tag for categorizing theories"

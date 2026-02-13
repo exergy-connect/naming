@@ -196,6 +196,13 @@
           "items": {
             "type": "integer"
           }
+        },
+        "sources": {
+          "type": "array",
+          "description": "Array of source descriptions tracking why this person was added to the database (e.g., 'referenced by paper feynman-1949-space-time', 'author of paper einstein-1905-relativity')",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
@@ -203,6 +210,9 @@
         "name"
       ],
       "x-created": 1,
+      "x-modified": [
+        1
+      ],
       "x-version": 1
     },
     "postulate": {
@@ -218,7 +228,7 @@
         },
         "statement": {
           "type": "string",
-          "description": "The explicitly stated postulate or principle (e.g., 'Equivalence Principle', 'Einstein Field Equations: G_μν = 8πG/c⁴ T_μν')"
+          "description": "The explicitly stated postulate or principle (e.g., 'Equivalence Principle', 'Einstein Field Equations: G_\u03bc\u03bd = 8\u03c0G/c\u2074 T_\u03bc\u03bd')"
         },
         "formulation_year": {
           "type": "integer",
